@@ -1,11 +1,8 @@
 from rest_framework import serializers
-from ..models.categoria import Categoria
-from ..models.funcionalidade import Funcionalidade
-from .funcionalidade import FuncionalidadeSerializer
+from app_home_feed.models.categoria import Categoria
+
 
 class CategoriaSerializer(serializers.ModelSerializer):
-    funcionalidades = FuncionalidadeSerializer(many=True)
-
     class Meta:
         model = Categoria
-        fields = ['id', 'nome', 'descricao', 'funcionalidades']
+        fields = ['id', 'nome', 'descricao']
