@@ -4,16 +4,16 @@ from app_home_feed.models.noticia import Noticia
 class NoticiaSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Noticia
-        fields = ['id', 'titulo', 'conteudo', 'imagem', 'categoria', 'data_publicacao']
+        fields = ['id', 'titulo', 'imagem']
 
 class NoticiaRelacionadaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Noticia
-        fields = ['id', 'titulo']
+        fields = ['id', 'titulo', 'imagem']
 
 class NoticiaSerializer(serializers.ModelSerializer):
     noticias_relacionadas = NoticiaRelacionadaSerializer(many=True, read_only=True)
 
     class Meta:
         model = Noticia
-        fields = ['id', 'titulo', 'conteudo', 'imagem', 'categoria', 'noticias_relacionadas', 'data_publicacao']
+        fields = ['id', 'titulo', 'conteudo', 'imagem', 'noticias_relacionadas', 'data_publicacao']
