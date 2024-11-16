@@ -9,9 +9,9 @@ from app_home_feed.models.video import Video
 from app_home_feed.serializers.banner import BannerSerializer
 from app_home_feed.serializers.categoria import CategoriaSerializer
 from app_home_feed.serializers.link_rapido import LinkRapidoSerializer
-from app_home_feed.serializers.noticia import NoticiaSerializer
+from app_home_feed.serializers.noticia import NoticiaSimpleSerializer  # Usando o serializer simplificado
 from app_home_feed.serializers.video import VideoSerializer
-from app_home_feed.pagination import PageNumberPagination
+from app_home_feed.pagination import CustomPageNumberPagination
 
 class FeedView(APIView):
     def get(self, request):
@@ -53,11 +53,20 @@ class FeedView(APIView):
                 noticias = noticias.filter(categoria_id=categoria_id)
 
             # Paginar as notícias
-            paginator = PageNumberPagination()
+            paginator = CustomPageNumberPagination()
             paginated_noticias = paginator.paginate_queryset(noticias, request)
-            noticias_serialized = NoticiaSerializer(paginated_noticias, many=True).data
+            noticias_serialized = NoticiaSimpleSerializer(paginated_noticias, many=True).data
 
-        # Retornando os itens selecionados organizados por seção
+            # Retorna a resposta paginada
+            return paginator.get_paginated_response({
+                "banners": banners_serialized,
+                "categorias": categorias_serialized,
+                "links_rapidos": links_serialized,
+                "noticias": noticias_serialized,
+                "videos": videos_serialized
+            })
+
+        # Retorna a resposta sem paginação (se as notícias não forem mostradas)
         return Response({
             "banners": banners_serialized,
             "categorias": categorias_serialized,
