@@ -1,19 +1,19 @@
 from rest_framework import serializers
-from app_home_feed.models import Noticia
+from app_home_feed.models.noticia import Noticia
+
+class NoticiaSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Noticia
+        fields = ['id', 'titulo', 'conteudo', 'imagem', 'categoria', 'data_publicacao']
+
+class NoticiaRelacionadaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Noticia
+        fields = ['id', 'titulo']
 
 class NoticiaSerializer(serializers.ModelSerializer):
-    noticias_relacionadas = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Noticia.objects.all(), required=False
-    )
+    noticias_relacionadas = NoticiaRelacionadaSerializer(many=True, read_only=True)
 
     class Meta:
         model = Noticia
-        fields = [
-            'id',
-            'titulo',
-            'conteudo',
-            'imagem',
-            'categoria',
-            'noticias_relacionadas',
-            'data_publicacao'
-        ]
+        fields = ['id', 'titulo', 'conteudo', 'imagem', 'categoria', 'noticias_relacionadas', 'data_publicacao']
