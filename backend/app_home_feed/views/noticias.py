@@ -1,9 +1,11 @@
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from app_home_feed.models.noticia import Noticia
 from app_home_feed.models.categoria import Categoria
-from app_home_feed.serializers.noticia import NoticiaSerializer
+from app_home_feed.serializers.noticia import NoticiaSimpleSerializer
 from app_home_feed.serializers.categoria import CategoriaSerializer
-from app_home_feed.pagination import PageNumberPagination
+from app_home_feed.pagination import CustomPageNumberPagination
 
 class NoticiasListView(APIView):
     def get(self, request):
@@ -19,9 +21,9 @@ class NoticiasListView(APIView):
             noticias = noticias.filter(categoria_id=categoria_id)
 
         # Paginar as notícias
-        paginator = PageNumberPagination()
+        paginator = CustomPageNumberPagination()
         paginated_noticias = paginator.paginate_queryset(noticias, request)
-        noticias_serialized = NoticiaSerializer(paginated_noticias, many=True).data
+        noticias_serialized = NoticiaSimpleSerializer(paginated_noticias, many=True).data
 
         # Retorna as categorias e as notícias paginadas
         return paginator.get_paginated_response({
