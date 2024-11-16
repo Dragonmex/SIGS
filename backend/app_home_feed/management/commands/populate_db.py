@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from app_home_feed.models import Categoria, Noticia, Video, LinkRapido, Funcionalidade, Banner
+from app_home_feed.models import Categoria, Noticia, Video, LinkRapido, Banner, ImagemBanner
 from django.utils import timezone
 
 class Command(BaseCommand):
@@ -8,151 +8,100 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # Criando as categorias, se não existirem
         categorias_data = [
-            {"nome": "Governo", "descricao": "Informações e atualizações sobre o governo estadual."},
-            {"nome": "Educação", "descricao": "Notícias e programas educacionais."},
-            {"nome": "Saúde", "descricao": "Informações sobre saúde pública e campanhas de vacinação."},
-            {"nome": "Segurança", "descricao": "Notícias sobre segurança pública e ações da polícia."},
-            {"nome": "Cultura", "descricao": "Eventos culturais e informações sobre patrimônio."},
-            {"nome": "Esporte", "descricao": "Eventos esportivos e programas de incentivo ao esporte."},
-            {"nome": "Meio Ambiente", "descricao": "Projetos de preservação e notícias ambientais."},
-            {"nome": "Tecnologia", "descricao": "Inovações e desenvolvimento tecnológico."},
-            {"nome": "Infraestrutura", "descricao": "Projetos de infraestrutura e urbanização."},
-            {"nome": "Transporte", "descricao": "Informações sobre transporte público e infraestrutura."},
+            {"nome": "Governo"},
+            {"nome": "Educação"},
+            {"nome": "Saúde"},
+            {"nome": "Segurança"},
+            {"nome": "Cultura"},
         ]
         
         for categoria_data in categorias_data:
-            Categoria.objects.get_or_create(
-                nome=categoria_data["nome"],
-                defaults={"descricao": categoria_data["descricao"]}
-            )
+            Categoria.objects.get_or_create(nome=categoria_data["nome"])
 
         # Criando os banners, se não existirem
         banners_data = [
-            {
-                "titulo": "Leilão de Bens Públicos",
-                "imagem": "banners/leilao_bens.jpg",
-                "descricao": "Governo do Estado vai leiloar bens públicos avaliados em R$ 1,8 milhão.",
-                "link": "https://exemplo.com/leilao"
-            },
-            {
-                "titulo": "Segurança Pública",
-                "imagem": "banners/seguranca_publica.jpg",
-                "descricao": "Estado encaminha PL para Alba buscando criação de 2.400 cargos na Polícia Civil.",
-                "link": "https://exemplo.com/seguranca"
-            },
-            {
-                "titulo": "Restituição de IPVA",
-                "imagem": "banners/restituicao_ipva.jpg",
-                "descricao": "Restituição de IPVA já pode ser feita pelo portal ba.gov.br.",
-                "link": "https://exemplo.com/ipva"
-            },
-            {
-                "titulo": "Educação no Estado",
-                "imagem": "banners/educacao_estado.jpg",
-                "descricao": "Novos programas de incentivo à educação básica e superior.",
-                "link": "https://exemplo.com/educacao"
-            },
-            {
-                "titulo": "Eventos Culturais",
-                "imagem": "banners/eventos_culturais.jpg",
-                "descricao": "Confira os próximos eventos culturais promovidos pelo Estado.",
-                "link": "https://exemplo.com/eventos"
-            },
+            {"titulo": "Leilão de Bens Públicos"},
+            {"titulo": "Segurança Pública"},
+            {"titulo": "Restituição de IPVA"},
+            {"titulo": "Educação no Estado"},
+            {"titulo": "Eventos Culturais"},
         ]
 
         for banner_data in banners_data:
-            Banner.objects.get_or_create(
-                titulo=banner_data["titulo"],
-                defaults={
-                    "imagem": banner_data["imagem"],
-                    "descricao": banner_data["descricao"],
-                    "link": banner_data["link"]
-                }
-            )
-
-        # Criando uma notícia, se não existir
-        categoria_educacao = Categoria.objects.get(nome="Educação")
-        categoria_saude = Categoria.objects.get(nome="Saúde")
-        
-        Noticia.objects.get_or_create(
-            titulo="Nova Escola Municipal Inaugurada",
-            defaults={
-                "conteudo": "Foi inaugurado uma nova escola no centro para atender a população.",
-                "categoria": categoria_educacao,
-                "data_publicacao": timezone.now().date()
-            }
-        )
-        
-        Noticia.objects.get_or_create(
-            titulo="Campanha de Vacinação Começa Hoje",
-            defaults={
-                "conteudo": "A campanha de vacinação contra a gripe começa hoje e irá até o final do mês.",
-                "categoria": categoria_saude,
-                "data_publicacao": timezone.now().date()
-            }
-        )
-
-        # Criando vídeos, se não existirem
-        Video.objects.get_or_create(
-            titulo="Como Funciona o Sistema de Saúde",
-            defaults={
-                "descricao": "Uma explicação completa sobre o funcionamento do SUS.",
-                "url": "https://www.youtube.com/watch?v=exemplo1"
-            }
-        )
-        
-        Video.objects.get_or_create(
-            titulo="Novo Serviço de Atendimento Rápido",
-            defaults={
-                "descricao": "Conheça o novo serviço de atendimento rápido para emergências.",
-                "url": "https://www.youtube.com/watch?v=exemplo2"
-            }
-        )
+            banner, created = Banner.objects.get_or_create(titulo=banner_data["titulo"])
+            if created:
+                # Criando 1 imagem para cada banner
+                ImagemBanner.objects.create(banner=banner, imagem="banners/exemplo.jpg")
 
         # Criando links rápidos, se não existirem
-        LinkRapido.objects.get_or_create(
-            titulo="Portal da Transparência",
-            defaults={
-                "url": "https://www.portaltransparencia.gov.br",
-                "descricao": "Acesse informações sobre gastos públicos."
-            }
-        )
-        
-        LinkRapido.objects.get_or_create(
-            titulo="Sistema Único de Saúde (SUS)",
-            defaults={
-                "url": "https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/sistema-unico-de-saude-sus",
-                "descricao": "Informações sobre o SUS e atendimento à saúde."
-            }
-        )
-        
-        LinkRapido.objects.get_or_create(
-            titulo="Serviços de Ouvidoria",
-            defaults={
-                "url": "https://www.gov.br/ouvidorias",
-                "descricao": "Acesso para denúncias, sugestões ou reclamações sobre serviços públicos."
-            }
-        )
-
-        # Criando funcionalidades, se não existirem
-        funcionalidades_data = [
-            {"nome": "Home Feed", "descricao": "Área principal com atualizações e novidades sobre serviços e projetos.", "rota": "/api/home-feed", "icone": "icons/home_icon.png"},
-            {"nome": "Construção de Serviços", "descricao": "Acompanhe o desenvolvimento e implementação de novos serviços.", "rota": "/api/construcao-servicos", "icone": "icons/servicos_icon.png"},
-            {"nome": "Status dos Serviços", "descricao": "Exibe o status dos serviços públicos em andamento.", "rota": "/api/status-servicos", "icone": "icons/status_icon.png"},
-            {"nome": "Análise de Dados", "descricao": "Ferramenta de visualização e análise de dados sobre saúde pública.", "rota": "/api/analise-dados", "icone": "icons/analise_icon.png"},
-            {"nome": "Observatório de Dados", "descricao": "Repositório de dados estatísticos e relatórios para insights sobre políticas.", "rota": "/api/observatorio-dados", "icone": "icons/observatorio_icon.png"},
-            {"nome": "Ouvidoria", "descricao": "Canal para reclamações, denúncias e sugestões dos cidadãos.", "rota": "/api/ouvidoria", "icone": "icons/ouvidoria_icon.png"},
-            {"nome": "Ecosistema de Inovação", "descricao": "Área dedicada ao incentivo à inovação, com projetos em desenvolvimento.", "rota": "/api/ecossistema-inovacao", "icone": "icons/inovacao_icon.png"},
+        links_rapidos_data = [
+            {"titulo": "Portal da Transparência", "url": "https://www.portaltransparencia.gov.br"},
+            {"titulo": "Sistema Único de Saúde (SUS)", "url": "https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/sistema-unico-de-saude-sus"},
+            {"titulo": "Serviços de Ouvidoria", "url": "https://www.gov.br/ouvidorias"},
+            {"titulo": "Consulta de Benefícios", "url": "https://www.consultabeneficios.gov.br"},
+            {"titulo": "Agendamento de Serviços", "url": "https://www.agendamentoservicos.gov.br"},
         ]
 
-        for funcionalidade_data in funcionalidades_data:
-            Funcionalidade.objects.get_or_create(
-                nome=funcionalidade_data["nome"],
+        for link_data in links_rapidos_data:
+            LinkRapido.objects.get_or_create(
+                titulo=link_data["titulo"],
+                defaults={"url": link_data["url"]}
+            )
+
+        # Criando vídeos, se não existirem
+        videos_data = [
+            {"titulo": "Como Funciona o Sistema de Saúde", "url": "https://www.youtube.com/watch?v=exemplo1"},
+            {"titulo": "Novo Serviço de Atendimento Rápido", "url": "https://www.youtube.com/watch?v=exemplo2"},
+            {"titulo": "Programa de Educação", "url": "https://www.youtube.com/watch?v=exemplo3"},
+            {"titulo": "Segurança Pública em Ação", "url": "https://www.youtube.com/watch?v=exemplo4"},
+            {"titulo": "Preservação Ambiental", "url": "https://www.youtube.com/watch?v=exemplo5"},
+        ]
+
+        for video_data in videos_data:
+            Video.objects.get_or_create(
+                titulo=video_data["titulo"],
+                defaults={"url": video_data["url"]}
+            )
+        # Criando 20 notícias realistas
+        noticias_data = [
+            {"titulo": "Governo Anuncia Novo Plano de Infraestrutura", "conteudo": "O governo anunciou um novo plano de infraestrutura que promete modernizar rodovias e ferrovias em todo o país."},
+            {"titulo": "Escolas Públicas Recebem Investimento Recorde", "conteudo": "As escolas públicas receberam um investimento recorde para melhorias nas instalações e novos equipamentos tecnológicos."},
+            {"titulo": "Campanha de Vacinação Supera Expectativas", "conteudo": "A campanha de vacinação contra a gripe superou as expectativas, com milhões de pessoas imunizadas na primeira semana."},
+            {"titulo": "Polícia Lança Operação para Combater o Crime Organizado", "conteudo": "Uma grande operação policial foi lançada para desmantelar uma rede de crime organizado, com várias prisões realizadas."},
+            {"titulo": "Festival Cultural Atrae Milhares de Visitantes", "conteudo": "O festival cultural deste ano atraiu milhares de visitantes, com apresentações artísticas e culinária típica."},
+            {"titulo": "Novo Hospital é Inaugurado na Região Metropolitana", "conteudo": "O novo hospital conta com tecnologia de ponta e promete melhorar o atendimento na região metropolitana."},
+            {"titulo": "Prefeitura Lança Programa de Reciclagem", "conteudo": "A prefeitura lançou um novo programa de reciclagem para incentivar a sustentabilidade nas comunidades."},
+            {"titulo": "Concurso Público Anunciado para o Setor de Segurança", "conteudo": "O governo anunciou um novo concurso público com vagas para o setor de segurança e salários atrativos."},
+            {"titulo": "Campanha de Doação de Sangue Acontece Neste Fim de Semana", "conteudo": "A campanha de doação de sangue acontecerá em diversos pontos da cidade, com expectativa de alta adesão."},
+            {"titulo": "Universidades Federais Recebem Novos Equipamentos", "conteudo": "O governo federal investiu em novos equipamentos para modernizar as universidades e melhorar a pesquisa acadêmica."},
+            {"titulo": "Evento Esportivo Regional Atrai Atletas de Todo o País", "conteudo": "O evento esportivo regional trouxe atletas de todo o Brasil para competir em diversas modalidades."},
+            {"titulo": "Prefeitura Inicia Obras de Pavimentação em Bairros", "conteudo": "As obras de pavimentação começaram em diversos bairros e devem ser concluídas até o próximo semestre."},
+            {"titulo": "Governo Anuncia Redução de Impostos para Pequenas Empresas", "conteudo": "Pequenas empresas terão uma redução de impostos, o que deve impulsionar a economia local."},
+            {"titulo": "Seminário de Tecnologia Discutirá Inovações Futuras", "conteudo": "Especialistas em tecnologia se reunirão para discutir inovações e o futuro do setor no país."},
+            {"titulo": "Festival Gastronômico Apresenta Pratos Típicos Regionais", "conteudo": "O festival gastronômico apresentará pratos típicos da culinária regional, com chefs renomados participando."},
+            {"titulo": "Projeto de Lei para Preservação Ambiental é Aprovado", "conteudo": "O projeto de lei que visa proteger áreas ambientais foi aprovado e entrará em vigor no próximo mês."},
+            {"titulo": "Comunidade Recebe Nova Área de Lazer", "conteudo": "A comunidade local agora conta com uma nova área de lazer, com parques, quadras esportivas e ciclovias."},
+            {"titulo": "Alunos de Escolas Públicas Participam de Programa de Artes", "conteudo": "O programa de artes visa incluir atividades culturais no currículo das escolas públicas, incentivando a criatividade."},
+            {"titulo": "Estado Investe em Novos Veículos para a Polícia", "conteudo": "O estado investiu em uma frota de novos veículos para melhorar o patrulhamento e a segurança nas ruas."},
+            {"titulo": "Exposição de Arte Contemporânea Acontece no Centro Cultural", "conteudo": "A exposição de arte contemporânea contará com obras de artistas locais e internacionais, aberta ao público gratuitamente."},
+        ]
+
+        categorias = Categoria.objects.all()
+        for i, noticia_data in enumerate(noticias_data):
+            categoria = categorias[i % len(categorias)]  # Distribuindo as notícias pelas categorias
+            Noticia.objects.get_or_create(
+                titulo=noticia_data["titulo"],
                 defaults={
-                    "descricao": funcionalidade_data["descricao"],
-                    "rota": funcionalidade_data["rota"],
-                    "icone": funcionalidade_data["icone"]
+                    "conteudo": noticia_data["conteudo"],
+                    "categoria": categoria,
+                    "data_publicacao": timezone.now().date()
                 }
             )
+
+
+        # Associando notícias relacionadas automaticamente com base na mesma categoria
+        for noticia in Noticia.objects.all():
+            relacionadas = Noticia.objects.filter(categoria=noticia.categoria).exclude(id=noticia.id)
+            noticia.noticias_relacionadas.set(relacionadas)
 
         self.stdout.write(self.style.SUCCESS("Banco de dados populado com sucesso, sem duplicações!"))
