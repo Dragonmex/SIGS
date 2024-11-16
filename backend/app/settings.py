@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'app_servicos',
     
     'rest_framework',
+    
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -133,8 +135,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuração opcional para melhorar a navegação na API
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS': 'app_home_feed.pagination.CustomPageNumberPagination',
+    'PAGE_SIZE': 10,  # Ou ajuste conforme necessário
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',  # Certifique-se de que isso está incluído
     ],
 }
