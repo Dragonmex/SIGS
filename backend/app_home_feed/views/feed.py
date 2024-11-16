@@ -1,7 +1,6 @@
-# views/feed.py
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
 from app_home_feed.models.banner import Banner
 from app_home_feed.models.categoria import Categoria
 from app_home_feed.models.link_rapido import LinkRapido
@@ -12,6 +11,7 @@ from app_home_feed.serializers.categoria import CategoriaSerializer
 from app_home_feed.serializers.link_rapido import LinkRapidoSerializer
 from app_home_feed.serializers.noticia import NoticiaSerializer
 from app_home_feed.serializers.video import VideoSerializer
+from app_home_feed.pagination import PageNumberPagination
 
 class FeedView(APIView):
     def get(self, request):
@@ -23,7 +23,7 @@ class FeedView(APIView):
         show_videos = request.GET.get('show_videos', 'true').lower() == 'true'
 
         # Inicializando os dados
-        banners_serialized = categorias_serialized = links_serialized = noticias_serialized = videos_serialized = []
+        banners_serialized = categorias_serialized = links_serialized = videos_serialized = []
 
         # Buscando e serializando apenas os itens que devem ser exibidos
         if show_banners:
@@ -38,13 +38,24 @@ class FeedView(APIView):
             links_rapidos = LinkRapido.objects.all()
             links_serialized = LinkRapidoSerializer(links_rapidos, many=True).data
 
-        if show_noticias:
-            noticias = Noticia.objects.all()
-            noticias_serialized = NoticiaSerializer(noticias, many=True).data
-
         if show_videos:
             videos = Video.objects.all()
             videos_serialized = VideoSerializer(videos, many=True).data
+
+        # Configurando filtro e paginação para as notícias
+        noticias_serialized = []
+        if show_noticias:
+            categoria_id = request.GET.get('categoria_id')
+            noticias = Noticia.objects.all()
+
+            # Filtrar por categoria se o parâmetro for fornecido
+            if categoria_id:
+                noticias = noticias.filter(categoria_id=categoria_id)
+
+            # Paginar as notícias
+            paginator = PageNumberPagination()
+            paginated_noticias = paginator.paginate_queryset(noticias, request)
+            noticias_serialized = NoticiaSerializer(paginated_noticias, many=True).data
 
         # Retornando os itens selecionados organizados por seção
         return Response({
@@ -53,4 +64,4 @@ class FeedView(APIView):
             "links_rapidos": links_serialized,
             "noticias": noticias_serialized,
             "videos": videos_serialized
-        })
+        }, status=status.HTTP_200_OK)
