@@ -4,6 +4,6 @@ from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('app_home_feed.urls')),  # Inclua as rotas da API principal
-    path('', RedirectView.as_view(url='/api/', permanent=True)),  # Redireciona para /api
+    path('feed/', include('app_home_feed.urls')),  # Inclua as rotas da API principal
+    path('', RedirectView.as_view(url='feed/', permanent=True)),  # Redireciona para /feed
 ]
