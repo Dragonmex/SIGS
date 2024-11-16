@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app_home_feed.models import Banner, ImagemBanner
+from app_home_feed.models.banner import Banner, ImagemBanner
 
 class ImagemBannerSerializer(serializers.ModelSerializer):
     class Meta:

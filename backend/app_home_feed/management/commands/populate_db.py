@@ -6,7 +6,15 @@ class Command(BaseCommand):
     help = "Popula o banco de dados com dados de exemplo para as tabelas principais"
 
     def handle(self, *args, **options):
-        # Criando as categorias, se não existirem
+        # Limpar dados antigos
+        ImagemBanner.objects.all().delete()
+        Banner.objects.all().delete()
+        LinkRapido.objects.all().delete()
+        Video.objects.all().delete()
+        Noticia.objects.all().delete()
+        Categoria.objects.all().delete()
+
+        # Criando as categorias
         categorias_data = [
             {"nome": "Governo"},
             {"nome": "Educação"},
@@ -14,11 +22,11 @@ class Command(BaseCommand):
             {"nome": "Segurança"},
             {"nome": "Cultura"},
         ]
-        
-        for categoria_data in categorias_data:
-            Categoria.objects.get_or_create(nome=categoria_data["nome"])
 
-        # Criando os banners, se não existirem
+        for categoria_data in categorias_data:
+            Categoria.objects.create(nome=categoria_data["nome"])
+
+        # Criando os banners com 5 imagens cada
         banners_data = [
             {"titulo": "Leilão de Bens Públicos"},
             {"titulo": "Segurança Pública"},
@@ -28,12 +36,14 @@ class Command(BaseCommand):
         ]
 
         for banner_data in banners_data:
-            banner, created = Banner.objects.get_or_create(titulo=banner_data["titulo"])
-            if created:
-                # Criando 1 imagem para cada banner
-                ImagemBanner.objects.create(banner=banner, imagem="banners/exemplo.jpg")
+            banner = Banner.objects.create(titulo=banner_data["titulo"])
+            for i in range(5):  # Criar 5 imagens para cada banner
+                ImagemBanner.objects.create(
+                    banner=banner,
+                    imagem=f"banners/exemplo_{banner.id}_{i+1}.jpg"  # Exemplo de caminho para a imagem
+                )
 
-        # Criando links rápidos, se não existirem
+        # Criando links rápidos
         links_rapidos_data = [
             {"titulo": "Portal da Transparência", "url": "https://www.portaltransparencia.gov.br"},
             {"titulo": "Sistema Único de Saúde (SUS)", "url": "https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/sistema-unico-de-saude-sus"},
@@ -43,12 +53,12 @@ class Command(BaseCommand):
         ]
 
         for link_data in links_rapidos_data:
-            LinkRapido.objects.get_or_create(
+            LinkRapido.objects.create(
                 titulo=link_data["titulo"],
-                defaults={"url": link_data["url"]}
+                url=link_data["url"]
             )
 
-        # Criando vídeos, se não existirem
+        # Criando vídeos
         videos_data = [
             {"titulo": "Como Funciona o Sistema de Saúde", "url": "https://www.youtube.com/watch?v=exemplo1"},
             {"titulo": "Novo Serviço de Atendimento Rápido", "url": "https://www.youtube.com/watch?v=exemplo2"},
@@ -58,10 +68,11 @@ class Command(BaseCommand):
         ]
 
         for video_data in videos_data:
-            Video.objects.get_or_create(
+            Video.objects.create(
                 titulo=video_data["titulo"],
-                defaults={"url": video_data["url"]}
+                url=video_data["url"]
             )
+
         # Criando 20 notícias realistas
         noticias_data = [
             {"titulo": "Governo Anuncia Novo Plano de Infraestrutura", "conteudo": "O governo anunciou um novo plano de infraestrutura que promete modernizar rodovias e ferrovias em todo o país."},
@@ -89,19 +100,16 @@ class Command(BaseCommand):
         categorias = Categoria.objects.all()
         for i, noticia_data in enumerate(noticias_data):
             categoria = categorias[i % len(categorias)]  # Distribuindo as notícias pelas categorias
-            Noticia.objects.get_or_create(
+            noticia = Noticia.objects.create(
                 titulo=noticia_data["titulo"],
-                defaults={
-                    "conteudo": noticia_data["conteudo"],
-                    "categoria": categoria,
-                    "data_publicacao": timezone.now().date()
-                }
+                conteudo=noticia_data["conteudo"],
+                categoria=categoria,
+                data_publicacao=timezone.now().date()
             )
-
 
         # Associando notícias relacionadas automaticamente com base na mesma categoria
         for noticia in Noticia.objects.all():
             relacionadas = Noticia.objects.filter(categoria=noticia.categoria).exclude(id=noticia.id)
             noticia.noticias_relacionadas.set(relacionadas)
 
-        self.stdout.write(self.style.SUCCESS("Banco de dados populado com sucesso, sem duplicações!"))
+        self.stdout.write(self.style.SUCCESS("Banco de dados populado com sucesso, com IDs reiniciados!"))
