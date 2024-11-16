@@ -1,14 +1,19 @@
 from rest_framework import serializers
-from ..models.noticia import Noticia
-from ..models.categoria import Categoria
+from app_home_feed.models import Noticia
 
 class NoticiaSerializer(serializers.ModelSerializer):
-    # Exibir o nome da categoria no output para fácil leitura
-    categoria = serializers.SlugRelatedField(
-        slug_field='nome', 
-        queryset=Categoria.objects.all()
+    noticias_relacionadas = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Noticia.objects.all(), required=False
     )
 
     class Meta:
         model = Noticia
-        fields = ['id', 'titulo', 'conteudo', 'categoria', 'data_publicacao']
+        fields = [
+            'id',
+            'titulo',
+            'conteudo',
+            'imagem',
+            'categoria',
+            'noticias_relacionadas',
+            'data_publicacao'
+        ]
