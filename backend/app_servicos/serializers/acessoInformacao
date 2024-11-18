@@ -1,0 +1,7 @@
+from rest_framework import serializers
+from .models.acesso_informacao import AcessoInformacao
+
+class AcessoInformacaoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AcessoInformacao
+        fields = ['id', 'nome_documento', 'descricao', 'documento', 'data_publicacao']
