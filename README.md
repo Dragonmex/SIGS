@@ -8,9 +8,7 @@ Sistema Integrado de Gestão de Serviços Públicos (SIGS). Este repositório co
 
 Certifique-se de ter os seguintes itens disponíveis:
 
-- Diretório `instaladores/` contendo:
-    - `python-3.10.11-amd64.exe` (instalador do Python)
-
+- [python-3.10.11](https://github.com/Dragonmex/SIGS/tree/master/instaladores)
 - [postgresql-15-x64](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
 - [Git](https://git-scm.com/downloads)
 - Microsoft Visual C++ Build Tools (veja o passo 5).
