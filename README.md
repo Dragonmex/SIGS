@@ -10,11 +10,24 @@ Certifique-se de ter os seguintes itens disponíveis:
 
 - Diretório `instaladores/` contendo:
     - `python-3.10.11-amd64.exe` (instalador do Python)
-    - `postgresql-15-x64.exe` (instalador do PostgreSQL)
-- [Git](https://git-scm.com/downloads) instalado no sistema.
+
+- [postgresql-15-x64](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
+- [Git](https://git-scm.com/downloads)
 - Microsoft Visual C++ Build Tools (veja o passo 5).
 
 ---
+
+Pré-requisitos
+
+Certifique-se de ter os seguintes itens disponíveis:
+
+    Diretório instaladores/ contendo:
+        python-3.10.11-amd64.exe (instalador do Python)
+    PostgreSQL 15 (baixe e instale manualmente).
+    Git instalado no sistema.
+    Microsoft Visual C++ Build Tools (veja o passo 5).
+
+
 
 ## **Passo a Passo para Configuração**
 
