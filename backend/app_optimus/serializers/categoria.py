@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app_home_feed.models import Categoria
+from app_optimus.models import Categoria
 
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:

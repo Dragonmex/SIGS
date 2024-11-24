@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('imagem', models.ImageField(upload_to='banners/')),
-                ('banner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='imagens', to='app_home_feed.banner')),
+                ('banner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='imagens', to='app_optimus.banner')),
             ],
         ),
         migrations.CreateModel(
@@ -58,8 +58,8 @@ class Migration(migrations.Migration):
                 ('conteudo', models.TextField()),
                 ('imagem', models.ImageField(blank=True, null=True, upload_to='noticias_imagens/')),
                 ('data_publicacao', models.DateField(auto_now_add=True)),
-                ('categoria', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='noticias', to='app_home_feed.categoria')),
-                ('noticias_relacionadas', models.ManyToManyField(blank=True, related_name='relacionadas', to='app_home_feed.noticia')),
+                ('categoria', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='noticias', to='app_optimus.categoria')),
+                ('noticias_relacionadas', models.ManyToManyField(blank=True, related_name='relacionadas', to='app_optimus.noticia')),
             ],
         ),
     ]

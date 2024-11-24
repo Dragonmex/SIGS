@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app_home_feed.models.noticia import Noticia
+from app_optimus.models.noticia import Noticia
 
 class NoticiaSimpleSerializer(serializers.ModelSerializer):
     class Meta:

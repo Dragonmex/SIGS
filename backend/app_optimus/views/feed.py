@@ -1,17 +1,17 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from app_home_feed.models.banner import Banner
-from app_home_feed.models.categoria import Categoria
-from app_home_feed.models.link_rapido import LinkRapido
-from app_home_feed.models.noticia import Noticia
-from app_home_feed.models.video import Video
-from app_home_feed.serializers.banner import BannerSerializer
-from app_home_feed.serializers.categoria import CategoriaSerializer
-from app_home_feed.serializers.link_rapido import LinkRapidoSerializer
-from app_home_feed.serializers.noticia import NoticiaSimpleSerializer  # Usando o serializer simplificado
-from app_home_feed.serializers.video import VideoSerializer
-from app_home_feed.pagination import CustomPageNumberPagination
+from app_optimus.models.banner import Banner
+from app_optimus.models.categoria import Categoria
+from app_optimus.models.link_rapido import LinkRapido
+from app_optimus.models.noticia import Noticia
+from app_optimus.models.video import Video
+from app_optimus.serializers.banner import BannerSerializer
+from app_optimus.serializers.categoria import CategoriaSerializer
+from app_optimus.serializers.link_rapido import LinkRapidoSerializer
+from app_optimus.serializers.noticia import NoticiaSimpleSerializer  # Usando o serializer simplificado
+from app_optimus.serializers.video import VideoSerializer
+from app_optimus.pagination import CustomPageNumberPagination
 
 class FeedView(APIView):
     def get(self, request):

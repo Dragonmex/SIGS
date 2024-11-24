@@ -39,12 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
         
     # apps
-    'app_dados',
-    'app_home_feed',
-    'app_inovacao',
-    'app_ouvidoria',
+
+    'app_optimus',
     'app_servicos',
-    
     'rest_framework',
     
     'django_filters',
@@ -136,7 +133,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configuração opcional para melhorar a navegação na API
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'DEFAULT_PAGINATION_CLASS': 'app_home_feed.pagination.CustomPageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'app_optimus.pagination.CustomPageNumberPagination',
     'PAGE_SIZE': 10,  # Ou ajuste conforme necessário
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',

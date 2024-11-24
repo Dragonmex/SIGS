@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app_home_feed.models import Video
+from app_optimus.models import Video
 
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:

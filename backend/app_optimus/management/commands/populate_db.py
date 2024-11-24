@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from app_home_feed.models import Categoria, Noticia, Video, LinkRapido, Banner, ImagemBanner
+from app_optimus.models import Categoria, Noticia, Video, LinkRapido, Banner, ImagemBanner
 from django.utils import timezone
 
 class Command(BaseCommand):

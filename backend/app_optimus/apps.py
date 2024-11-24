@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class AppOuvidoriaConfig(AppConfig):
+class AppHomeFeedConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'app_ouvidoria'
+    name = 'app_optimus'

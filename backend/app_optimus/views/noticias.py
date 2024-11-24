@@ -3,11 +3,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
-from app_home_feed.models.noticia import Noticia
-from app_home_feed.models.categoria import Categoria
-from app_home_feed.serializers.noticia import NoticiaSimpleSerializer, NoticiaSerializer
-from app_home_feed.serializers.categoria import CategoriaSerializer
-from app_home_feed.pagination import CustomPageNumberPagination
+from app_optimus.models.noticia import Noticia
+from app_optimus.models.categoria import Categoria
+from app_optimus.serializers.noticia import NoticiaSimpleSerializer, NoticiaSerializer
+from app_optimus.serializers.categoria import CategoriaSerializer
+from app_optimus.pagination import CustomPageNumberPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django.shortcuts import get_object_or_404
 
