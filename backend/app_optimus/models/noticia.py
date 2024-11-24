@@ -1,13 +1,14 @@
 from django.db import models
-from .categoria import Categoria
+from app_optimus.models import CategoriaNoticia
 
 class Noticia(models.Model):
     titulo = models.CharField(max_length=255)
+    resumo = models.TextField()
     conteudo = models.TextField()
-    imagem = models.ImageField(upload_to='noticias_imagens/', blank=True, null=True)
-    categoria = models.ForeignKey(Categoria, related_name='noticias', on_delete=models.CASCADE)
-    noticias_relacionadas = models.ManyToManyField('self', blank=True, related_name='relacionadas')
-    data_publicacao = models.DateField(auto_now_add=True)
+    imagem = models.ImageField(upload_to='noticias/', blank=True, null=True)
+    data_publicacao = models.DateTimeField(auto_now_add=True)
+    autor = models.CharField(max_length=255, blank=True)
+    categoria = models.ForeignKey(CategoriaNoticia, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.titulo

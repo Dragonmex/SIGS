@@ -1,9 +1,7 @@
 from django.contrib import admin
-from .models import Banner, Categoria, LinkRapido, Noticia, Video
+from .models import CategoriaNoticia, Noticia, CategoriaServico, Servico
 
-# Registrando cada modelo para aparecer na interface do admin
-admin.site.register(Banner)
-admin.site.register(Categoria)
-admin.site.register(LinkRapido)
+admin.site.register(CategoriaNoticia)
 admin.site.register(Noticia)
-admin.site.register(Video)
+admin.site.register(CategoriaServico)
+admin.site.register(Servico)

@@ -41,9 +41,7 @@ INSTALLED_APPS = [
     # apps
 
     'app_optimus',
-    'app_servicos',
     'rest_framework',
-    
     'django_filters',
 ]
 
