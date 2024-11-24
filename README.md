@@ -22,7 +22,7 @@ Certifique-se de ter os seguintes itens disponíveis:
 Abra o terminal ou o Git Bash e execute os comandos abaixo:
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://github.com/Dragonmex/SIGS.git
 cd seu-repositorio/backend
 ```
 
@@ -32,7 +32,6 @@ cd seu-repositorio/backend
 2. Execute o arquivo `python-3.10.11-amd64.exe`.
 3. Durante a instalação:
     - Habilite a opção **"Add Python to PATH"**.
-    - Escolha **"Instalação personalizada"** e ative todas as opções recomendadas.
 4. Teste a instalação:
 
 ```bash
