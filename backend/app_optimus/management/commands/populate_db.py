@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from app_optimus.models import Categoria, Noticia, Video, LinkRapido, Banner, ImagemBanner
+from app_optimus.models import CategoriaNoticia, CategoriaServico, Noticia, Servico
 from django.utils import timezone
 
 class Command(BaseCommand):
@@ -7,109 +7,146 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Limpar dados antigos
-        ImagemBanner.objects.all().delete()
-        Banner.objects.all().delete()
-        LinkRapido.objects.all().delete()
-        Video.objects.all().delete()
+        Servico.objects.all().delete()
         Noticia.objects.all().delete()
-        Categoria.objects.all().delete()
+        CategoriaServico.objects.all().delete()
+        CategoriaNoticia.objects.all().delete()
 
-        # Criando as categorias
-        categorias_data = [
-            {"nome": "Governo"},
-            {"nome": "Educação"},
-            {"nome": "Saúde"},
-            {"nome": "Segurança"},
-            {"nome": "Cultura"},
+        # Criando categorias de notícias
+        categorias_noticias_data = [
+            {"nome": "Política", "descricao": "Notícias relacionadas ao governo e administração pública", "slug": "politica"},
+            {"nome": "Educação", "descricao": "Atualizações sobre o setor educacional", "slug": "educacao"},
+            {"nome": "Saúde", "descricao": "Notícias do setor de saúde pública e privada", "slug": "saude"},
+            {"nome": "Esporte", "descricao": "Novidades sobre esportes e competições", "slug": "esporte"},
+            {"nome": "Cultura", "descricao": "Eventos culturais e artísticos", "slug": "cultura"},
         ]
 
-        for categoria_data in categorias_data:
-            Categoria.objects.create(nome=categoria_data["nome"])
+        for categoria_data in categorias_noticias_data:
+            CategoriaNoticia.objects.create(**categoria_data)
 
-        # Criando os banners com 5 imagens cada
-        banners_data = [
-            {"titulo": "Leilão de Bens Públicos"},
-            {"titulo": "Segurança Pública"},
-            {"titulo": "Restituição de IPVA"},
-            {"titulo": "Educação no Estado"},
-            {"titulo": "Eventos Culturais"},
-        ]
+        # Criando categorias de serviços
+        categorias_servicos_data = [
+            {"nome": "Saúde", "descricao": "Serviços relacionados à saúde pública", "slug": "saude"},
+            {"nome": "Educação", "descricao": "Serviços voltados ao ensino e formação", "slug": "educacao"},
+            {"nome": "Transporte", "descricao": "Serviços de transporte público e mobilidade urbana", "slug": "transporte"},
+            {"nome": "Segurança", "descricao": "Serviços relacionados à segurança pública", "slug": "seguranca"},
+            {"nome": "Assistência Social", "descricao": "Programas de apoio social", "slug": "assistencia-social"},
+            {"nome": "Habitação", "descricao": "Serviços voltados à moradia e urbanização", "slug": "habitacao"},
+            {"nome": "Cultura", "descricao": "Serviços culturais e eventos artísticos", "slug": "cultura"},
+            {"nome": "Esporte", "descricao": "Programas esportivos e recreativos", "slug": "esporte"},
+            {"nome": "Meio Ambiente", "descricao": "Serviços relacionados à preservação ambiental", "slug": "meio-ambiente"},
+            {"nome": "Trabalho e Emprego", "descricao": "Programas de incentivo ao trabalho e geração de empregos", "slug": "trabalho-emprego"},
+            {"nome": "Turismo", "descricao": "Iniciativas para promover o turismo local", "slug": "turismo"},
+            {"nome": "Fazenda", "descricao": "Serviços de arrecadação e gestão tributária", "slug": "fazenda"},
+            {"nome": "Infraestrutura", "descricao": "Serviços de obras públicas e manutenção urbana", "slug": "infraestrutura"},
+            {"nome": "Tecnologia", "descricao": "Inovação tecnológica e inclusão digital", "slug": "tecnologia"},
+            {"nome": "Direitos Humanos", "descricao": "Apoio à inclusão e garantia de direitos", "slug": "direitos-humanos"},
+            {"nome": "Ouvidoria", "descricao": "Serviços para escuta e resolução de demandas dos cidadãos", "slug": "ouvidoria"},
+            {"nome": "Saneamento Básico", "descricao": "Serviços de abastecimento de água e tratamento de esgoto", "slug": "saneamento-basico"},
+            {"nome": "Agricultura", "descricao": "Incentivo à produção agrícola e apoio rural", "slug": "agricultura"},
+            {"nome": "Indústria e Comércio", "descricao": "Apoio ao desenvolvimento industrial e comercial", "slug": "industria-comercio"},
+            {"nome": "Defesa Civil", "descricao": "Prevenção e resposta a desastres e emergências", "slug": "defesa-civil"},
+]
 
-        for banner_data in banners_data:
-            banner = Banner.objects.create(titulo=banner_data["titulo"])
-            for i in range(5):  # Criar 5 imagens para cada banner
-                ImagemBanner.objects.create(
-                    banner=banner,
-                    imagem=f"banners/exemplo_{banner.id}_{i+1}.jpg"  # Exemplo de caminho para a imagem
-                )
+        for categoria_data in categorias_servicos_data:
+            CategoriaServico.objects.create(**categoria_data)
 
-        # Criando links rápidos
-        links_rapidos_data = [
-            {"titulo": "Portal da Transparência", "url": "https://www.portaltransparencia.gov.br"},
-            {"titulo": "Sistema Único de Saúde (SUS)", "url": "https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/sistema-unico-de-saude-sus"},
-            {"titulo": "Serviços de Ouvidoria", "url": "https://www.gov.br/ouvidorias"},
-            {"titulo": "Consulta de Benefícios", "url": "https://www.consultabeneficios.gov.br"},
-            {"titulo": "Agendamento de Serviços", "url": "https://www.agendamentoservicos.gov.br"},
-        ]
-
-        for link_data in links_rapidos_data:
-            LinkRapido.objects.create(
-                titulo=link_data["titulo"],
-                url=link_data["url"]
-            )
-
-        # Criando vídeos
-        videos_data = [
-            {"titulo": "Como Funciona o Sistema de Saúde", "url": "https://www.youtube.com/watch?v=exemplo1"},
-            {"titulo": "Novo Serviço de Atendimento Rápido", "url": "https://www.youtube.com/watch?v=exemplo2"},
-            {"titulo": "Programa de Educação", "url": "https://www.youtube.com/watch?v=exemplo3"},
-            {"titulo": "Segurança Pública em Ação", "url": "https://www.youtube.com/watch?v=exemplo4"},
-            {"titulo": "Preservação Ambiental", "url": "https://www.youtube.com/watch?v=exemplo5"},
-        ]
-
-        for video_data in videos_data:
-            Video.objects.create(
-                titulo=video_data["titulo"],
-                url=video_data["url"]
-            )
-
-        # Criando 20 notícias realistas
+        # Criando 10 notícias
+        categorias_noticias = list(CategoriaNoticia.objects.all())
+        # Criando notícias
         noticias_data = [
-            {"titulo": "Governo Anuncia Novo Plano de Infraestrutura", "conteudo": "O governo anunciou um novo plano de infraestrutura que promete modernizar rodovias e ferrovias em todo o país."},
-            {"titulo": "Escolas Públicas Recebem Investimento Recorde", "conteudo": "As escolas públicas receberam um investimento recorde para melhorias nas instalações e novos equipamentos tecnológicos."},
-            {"titulo": "Campanha de Vacinação Supera Expectativas", "conteudo": "A campanha de vacinação contra a gripe superou as expectativas, com milhões de pessoas imunizadas na primeira semana."},
-            {"titulo": "Polícia Lança Operação para Combater o Crime Organizado", "conteudo": "Uma grande operação policial foi lançada para desmantelar uma rede de crime organizado, com várias prisões realizadas."},
-            {"titulo": "Festival Cultural Atrae Milhares de Visitantes", "conteudo": "O festival cultural deste ano atraiu milhares de visitantes, com apresentações artísticas e culinária típica."},
-            {"titulo": "Novo Hospital é Inaugurado na Região Metropolitana", "conteudo": "O novo hospital conta com tecnologia de ponta e promete melhorar o atendimento na região metropolitana."},
-            {"titulo": "Prefeitura Lança Programa de Reciclagem", "conteudo": "A prefeitura lançou um novo programa de reciclagem para incentivar a sustentabilidade nas comunidades."},
-            {"titulo": "Concurso Público Anunciado para o Setor de Segurança", "conteudo": "O governo anunciou um novo concurso público com vagas para o setor de segurança e salários atrativos."},
-            {"titulo": "Campanha de Doação de Sangue Acontece Neste Fim de Semana", "conteudo": "A campanha de doação de sangue acontecerá em diversos pontos da cidade, com expectativa de alta adesão."},
-            {"titulo": "Universidades Federais Recebem Novos Equipamentos", "conteudo": "O governo federal investiu em novos equipamentos para modernizar as universidades e melhorar a pesquisa acadêmica."},
-            {"titulo": "Evento Esportivo Regional Atrai Atletas de Todo o País", "conteudo": "O evento esportivo regional trouxe atletas de todo o Brasil para competir em diversas modalidades."},
-            {"titulo": "Prefeitura Inicia Obras de Pavimentação em Bairros", "conteudo": "As obras de pavimentação começaram em diversos bairros e devem ser concluídas até o próximo semestre."},
-            {"titulo": "Governo Anuncia Redução de Impostos para Pequenas Empresas", "conteudo": "Pequenas empresas terão uma redução de impostos, o que deve impulsionar a economia local."},
-            {"titulo": "Seminário de Tecnologia Discutirá Inovações Futuras", "conteudo": "Especialistas em tecnologia se reunirão para discutir inovações e o futuro do setor no país."},
-            {"titulo": "Festival Gastronômico Apresenta Pratos Típicos Regionais", "conteudo": "O festival gastronômico apresentará pratos típicos da culinária regional, com chefs renomados participando."},
-            {"titulo": "Projeto de Lei para Preservação Ambiental é Aprovado", "conteudo": "O projeto de lei que visa proteger áreas ambientais foi aprovado e entrará em vigor no próximo mês."},
-            {"titulo": "Comunidade Recebe Nova Área de Lazer", "conteudo": "A comunidade local agora conta com uma nova área de lazer, com parques, quadras esportivas e ciclovias."},
-            {"titulo": "Alunos de Escolas Públicas Participam de Programa de Artes", "conteudo": "O programa de artes visa incluir atividades culturais no currículo das escolas públicas, incentivando a criatividade."},
-            {"titulo": "Estado Investe em Novos Veículos para a Polícia", "conteudo": "O estado investiu em uma frota de novos veículos para melhorar o patrulhamento e a segurança nas ruas."},
-            {"titulo": "Exposição de Arte Contemporânea Acontece no Centro Cultural", "conteudo": "A exposição de arte contemporânea contará com obras de artistas locais e internacionais, aberta ao público gratuitamente."},
-        ]
+    {
+        "titulo": "Governo Municipal Lança Novo Programa de Saúde Preventiva",
+        "resumo": "Iniciativa busca atender mais de 50 mil moradores com foco em prevenção.",
+        "conteudo": "O programa de saúde preventiva lançado pela Prefeitura inclui campanhas de vacinação, check-ups gratuitos em postos de saúde e palestras sobre bem-estar. O objetivo é reduzir os casos de doenças evitáveis e melhorar a qualidade de vida da população. Segundo o prefeito, a ação também visa desafogar o sistema de saúde da cidade.",
+        "autor": "Equipe de Comunicação",
+        "data_publicacao": timezone.now(),
+    },
+    {
+        "titulo": "Escolas Municipais Recebem Investimento de R$ 5 Milhões",
+        "resumo": "Recursos serão destinados para melhorias em infraestrutura e aquisição de materiais didáticos.",
+        "conteudo": "A Prefeitura anunciou um investimento recorde em educação para reformar escolas, construir novas salas de aula e adquirir equipamentos tecnológicos. A ação beneficiará cerca de 30 mil alunos da rede municipal. Segundo a secretária de educação, as reformas começarão ainda este semestre.",
+        "autor": "Assessoria de Imprensa",
+        "data_publicacao": timezone.now(),
+    },
+    {
+        "titulo": "Prefeitura Organiza Festival Cultural com Entrada Gratuita",
+        "resumo": "Evento contará com apresentações musicais, exposições de arte e feira gastronômica.",
+        "conteudo": "O Festival Cultural, que acontecerá na praça central da cidade, reunirá artistas locais e regionais. A iniciativa tem como objetivo promover a cultura e valorizar os talentos locais. Estima-se que cerca de 10 mil pessoas compareçam ao evento durante o final de semana.",
+        "autor": "Departamento de Cultura",
+        "data_publicacao": timezone.now(),
+    },
+    {
+        "titulo": "Projeto de Arborização Planta Mil Árvores em Bairros Carentes",
+        "resumo": "Ação faz parte do programa de sustentabilidade da Prefeitura.",
+        "conteudo": "A Prefeitura iniciou o projeto de arborização urbana com o plantio de mil árvores em bairros com baixa cobertura vegetal. A ação busca melhorar a qualidade do ar e proporcionar mais áreas verdes para a população. Moradores também receberam orientações sobre cuidados com as mudas.",
+        "autor": "Secretaria de Meio Ambiente",
+        "data_publicacao": timezone.now(),
+    },
+    {
+        "titulo": "Nova Linha de Ônibus Reduz Tempo de Deslocamento em 30%",
+        "resumo": "Moradores de bairros afastados agora contam com transporte público mais eficiente.",
+        "conteudo": "A Prefeitura anunciou a criação de uma nova linha de ônibus para atender moradores de áreas periféricas. Com trajetos mais curtos e maior frequência, a medida promete reduzir significativamente o tempo de deslocamento até o centro da cidade.",
+        "autor": "Assessoria de Transporte",
+        "data_publicacao": timezone.now(),
+    },
+    {
+        "titulo": "Campanha de Vacinação Contra Gripe Atinge 80% do Público-Alvo",
+        "resumo": "Mais de 20 mil pessoas foram vacinadas em menos de uma semana.",
+        "conteudo": "A Prefeitura comemorou o sucesso da campanha de vacinação contra a gripe. Postos de saúde e unidades móveis foram mobilizados para imunizar moradores em diversas regiões. A meta de vacinar 100% do público-alvo deve ser alcançada nos próximos dias.",
+        "autor": "Secretaria de Saúde",
+        "data_publicacao": timezone.now(),
+    },
+    {
+        "titulo": "Concurso Público Abre 200 Vagas para Diversas Áreas",
+        "resumo": "Oportunidades abrangem saúde, educação e segurança pública.",
+        "conteudo": "A Prefeitura abriu inscrições para um novo concurso público com salários que variam de R$ 1.500 a R$ 8.000. Os candidatos terão até o final do mês para se inscrever. O edital completo está disponível no site oficial da Prefeitura.",
+        "autor": "Departamento de Recursos Humanos",
+        "data_publicacao": timezone.now(),
+    },
+    {
+        "titulo": "Mutirão de Limpeza Remove 50 Toneladas de Resíduos",
+        "resumo": "Ação envolveu mais de 200 voluntários em diversos bairros da cidade.",
+        "conteudo": "Com o apoio de moradores e organizações locais, a Prefeitura realizou um mutirão para recolher resíduos e promover a conscientização sobre descarte adequado de lixo. Além da coleta, os participantes receberam orientações sobre reciclagem e sustentabilidade.",
+        "autor": "Secretaria de Infraestrutura",
+        "data_publicacao": timezone.now(),
+    },
+    {
+        "titulo": "Prefeitura Reduz Taxa de Licenciamento para Pequenos Negócios",
+        "resumo": "Medida busca incentivar o empreendedorismo na cidade.",
+        "conteudo": "Empreendedores locais comemoraram a redução da taxa de licenciamento para pequenos negócios, anunciada pela Prefeitura. A medida é válida para empresas com faturamento anual de até R$ 120 mil e pretende estimular a economia local.",
+        "autor": "Secretaria de Desenvolvimento Econômico",
+        "data_publicacao": timezone.now(),
+    },
+    {
+        "titulo": "Obras de Pavimentação São Concluídas em Tempo Recorde",
+        "resumo": "Moradores de quatro bairros agora têm acesso a ruas asfaltadas.",
+        "conteudo": "A Prefeitura entregou as obras de pavimentação em quatro bairros, melhorando a mobilidade urbana e valorizando os imóveis da região. As obras, iniciadas há três meses, foram concluídas antes do prazo previsto.",
+        "autor": "Assessoria de Infraestrutura",
+        "data_publicacao": timezone.now(),
+    },
+    ]
 
-        categorias = Categoria.objects.all()
         for i, noticia_data in enumerate(noticias_data):
-            categoria = categorias[i % len(categorias)]  # Distribuindo as notícias pelas categorias
-            noticia = Noticia.objects.create(
-                titulo=noticia_data["titulo"],
-                conteudo=noticia_data["conteudo"],
-                categoria=categoria,
-                data_publicacao=timezone.now().date()
-            )
+            noticia_data["categoria"] = categorias_noticias[i % len(categorias_noticias)]
+            Noticia.objects.create(**noticia_data)
 
-        # Associando notícias relacionadas automaticamente com base na mesma categoria
-        for noticia in Noticia.objects.all():
-            relacionadas = Noticia.objects.filter(categoria=noticia.categoria).exclude(id=noticia.id)
-            noticia.noticias_relacionadas.set(relacionadas)
+        # Criando 10 serviços
+        categorias_servicos = list(CategoriaServico.objects.all())
+        servicos_data = [
+            {"nome": "Consulta Médica", "descricao": "Agendamento de consultas médicas em unidades de saúde.", "categoria": CategoriaServico.objects.get(slug="saude")},
+            {"nome": "Matrícula Escolar", "descricao": "Serviço de matrícula para escolas públicas municipais.", "categoria": CategoriaServico.objects.get(slug="educacao")},
+            {"nome": "Bilhete Único", "descricao": "Emissão de cartões para transporte público com integração tarifária.", "categoria": CategoriaServico.objects.get(slug="transporte")},
+            {"nome": "Patrulhamento de Bairros", "descricao": "Rondas de segurança realizadas pela guarda municipal.", "categoria": CategoriaServico.objects.get(slug="seguranca")},
+            {"nome": "Cadastro para Auxílio Social", "descricao": "Inscrição em programas de apoio a famílias em situação de vulnerabilidade.", "categoria": CategoriaServico.objects.get(slug="assistencia-social")},
+            {"nome": "Solicitação de Obras", "descricao": "Registro de solicitações de pavimentação e melhorias urbanas.", "categoria": CategoriaServico.objects.get(slug="infraestrutura")},
+            {"nome": "Cadastro Ambiental Rural (CAR)", "descricao": "Regularização ambiental de propriedades rurais.", "categoria": CategoriaServico.objects.get(slug="meio-ambiente")},
+            {"nome": "Orientação para Empreendedores", "descricao": "Serviço de apoio a micro e pequenos empresários.", "categoria": CategoriaServico.objects.get(slug="industria-comercio")},
+            {"nome": "Inscrição para Eventos Culturais", "descricao": "Cadastro em eventos culturais e festivais organizados pela prefeitura.", "categoria": CategoriaServico.objects.get(slug="cultura")},
+            {"nome": "Esporte na Comunidade", "descricao": "Programas esportivos e recreativos em espaços públicos.", "categoria": CategoriaServico.objects.get(slug="esporte")},
+]
 
-        self.stdout.write(self.style.SUCCESS("Banco de dados populado com sucesso, com IDs reiniciados!"))
+        for servico_data in servicos_data:
+            Servico.objects.create(**servico_data)
+
+        self.stdout.write(self.style.SUCCESS("Banco de dados populado com sucesso!"))

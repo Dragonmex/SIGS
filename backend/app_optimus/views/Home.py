@@ -15,9 +15,12 @@ class Home(APIView):
         servicos_serializer = ServicoSerializer(servicos, many=True)
 
         links_uteis = [
-            {"nome": "Guia de Serviços Públicos", "url": "https://exemplo.com/guia"},
-            {"nome": "Vídeo: Como Solicitar um Serviço", "url": "https://youtube.com/video"}
-        ]
+            {"nome": "Portal da Transparência", "url": "https://www.portaltransparencia.gov.br"},
+            {"nome": "Consulta de IPTU", "url": "https://www.prefeitura.gov.br/consulta-iptu"},
+            {"nome": "Agendamento de Serviços Municipais", "url": "https://www.prefeitura.gov.br/agendamento-servicos"},
+            {"nome": "Ouvidoria Municipal", "url": "https://www.prefeitura.gov.br/ouvidoria"},
+            {"nome": "Calendário de Eventos Culturais", "url": "https://www.prefeitura.gov.br/eventos-culturais"},
+]
 
         return Response({
             "noticias": noticias_serializer.data,
