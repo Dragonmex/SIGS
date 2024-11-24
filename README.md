@@ -15,18 +15,6 @@ Certifique-se de ter os seguintes itens disponíveis:
 
 ---
 
-Pré-requisitos
-
-Certifique-se de ter os seguintes itens disponíveis:
-
-    Diretório instaladores/ contendo:
-        python-3.10.11-amd64.exe (instalador do Python)
-    PostgreSQL 15 (baixe e instale manualmente).
-    Git instalado no sistema.
-    Microsoft Visual C++ Build Tools (veja o passo 5).
-
-
-
 ## **Passo a Passo para Configuração**
 
 ### **1. Clone o Repositório**
