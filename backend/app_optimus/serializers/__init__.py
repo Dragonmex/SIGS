@@ -1,0 +1,2 @@
+from .NoticiaSerializer import NoticiaSerializer
+from .ServicoSerializer import ServicoSerializer
