@@ -2,15 +2,16 @@ from django.core.management.base import BaseCommand
 from app_optimus.models import CategoriaNoticia, CategoriaServico, Noticia, Servico
 from django.utils import timezone
 
+
 class Command(BaseCommand):
-    help = "Popula o banco de dados com dados de exemplo para as tabelas principais"
+    help = "Popula o banco de dados 'conteudos_db' com dados de exemplo para as tabelas principais"
 
     def handle(self, *args, **options):
         # Limpar dados antigos
-        Servico.objects.all().delete()
-        Noticia.objects.all().delete()
-        CategoriaServico.objects.all().delete()
-        CategoriaNoticia.objects.all().delete()
+        Servico.objects.using('conteudos').all().delete()
+        Noticia.objects.using('conteudos').all().delete()
+        CategoriaServico.objects.using('conteudos').all().delete()
+        CategoriaNoticia.objects.using('conteudos').all().delete()
 
         # Criando categorias de notícias
         categorias_noticias_data = [
