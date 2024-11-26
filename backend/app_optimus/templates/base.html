@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SIGS{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-dark py-3 px-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Link "Home" -->
+            <a class="text-white fw-bold text-decoration-none fs-4" href="{% url 'home' %}">Home</a>
+            <!-- Links "Cadastrar" e "Login" -->
+            <div>
+                <a class="btn btn-outline-light me-2" href="{% url 'cadastro_usuario' %}">Cadastrar</a>
+                <a class="btn btn-light text-dark" href="{% url 'login' %}">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Conteúdo centralizado -->
+    <main class="mt-5 px-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="bg-light text-center py-3 mt-4">
+        <p class="mb-0">© 2024 Sistema Integrado de Gestão</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
