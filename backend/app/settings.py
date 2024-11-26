@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -60,7 +60,7 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'backend/app_optimus/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,15 +80,25 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'default': {  # Banco padrão para usuários
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'app',           # Nome do banco de dados que você criou
-        'USER': 'postgres',      # Usuário do banco (geralmente 'postgres')
-        'PASSWORD': 'admin', # A senha configurada durante a instalação do PostgreSQL
-        'HOST': 'localhost',     # Servidor (localhost para desenvolvimento local)
-        'PORT': '5432',          # Porta padrão do PostgreSQL
-    }
+        'NAME': 'usuarios_db',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
+    'conteudos': {  # Banco adicional para conteúdos
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'conteudos_db',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
 }
+
+DATABASE_ROUTERS = ['app.routers.DatabaseRouter']
 
 
 # Password validation
@@ -125,7 +135,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'backend/app_optimus/static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
