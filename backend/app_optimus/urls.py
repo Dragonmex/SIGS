@@ -1,8 +1,9 @@
 from django.urls import path
-from app_optimus.views import login_view, cadastro_view, home_view
+from app_optimus.views import LoginAPI, LogoutAPI, HomeAPI, CadastroUsuarioAPI
 
 urlpatterns = [
-    path('login/', login_view, name='login'),  # Página de login
-    path('cadastro/', cadastro_view, name='cadastro_usuario'),  # Página de cadastro
-    path('home/', home_view, name='home'),  # Página inicial após login
+    path('api/login/', LoginAPI.as_view(), name='api-login'),
+    path('api/logout/', LogoutAPI.as_view(), name='api-logout'),
+    path('api/home/', HomeAPI.as_view(), name='api-home'),
+    path('api/register/', CadastroUsuarioAPI.as_view(), name='api-cadastro'),
 ]

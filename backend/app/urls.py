@@ -4,6 +4,6 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(url='login/', permanent=False)),  # Redireciona a raiz para o login
-    path('', include('app_optimus.urls')),  # Inclui as rotas do app
+    path('', include('app_optimus.urls')),  # Inclui todas as rotas do app com o prefixo 'api/'
+    path('', RedirectView.as_view(url='/api/home/', permanent=False)),  # Redireciona para o login
 ]

@@ -1,6 +1,5 @@
 from django.db import models
 
-
 # Categorias de Serviços
 class CategoriaServico(models.Model):
     nome = models.CharField(max_length=255, unique=True)
@@ -19,8 +18,7 @@ class CategoriaNoticia(models.Model):
 
     def __str__(self):
         return self.nome
-
-
+    
 # Serviços
 class Servico(models.Model):
     nome = models.CharField(max_length=255)

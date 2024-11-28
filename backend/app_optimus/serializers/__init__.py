@@ -1,1 +1,2 @@
-from .conteudos_db import NoticiaSerializer, ServicoSerializer
+from .servicos import CategoriaServicoSerializer, CategoriaNoticiaSerializer, ServicoSerializer, NoticiaSerializer
+from .usuarios import UsuarioSerializer, CidadaoSerializer, ServidorSerializer, CadastroUsuarioSerializer

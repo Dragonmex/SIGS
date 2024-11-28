@@ -1,0 +1,90 @@
+/* Container principal da Home */
+.home-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #6e7fdb, #8a50ff); /* Gradiente suave */
+  padding-top: 50px;  /* Adicionando padding superior para não colar no header */
+}
+
+/* Cartão principal da Home */
+.home-card {
+  background: white;
+  padding: 3rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: box-shadow 0.3s ease; /* Transição suave para o box-shadow */
+}
+
+/* Efeito ao passar o mouse sobre o cartão */
+.home-card:hover {
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); /* Sombra mais forte ao passar o mouse */
+}
+
+/* Título */
+.home-card h2 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: #333;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* Descrição */
+.home-card p {
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Botões de ação */
+.home-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap; /* Permite que os botões se ajustem em telas menores */
+}
+
+.btn-action {
+  padding: 15px;
+  background: linear-gradient(90deg, #8a50ff, #6e7fdb);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  width: 200px; /* Largura definida para botões */
+  text-align: center;
+}
+
+.btn-action:hover {
+  background: linear-gradient(90deg, #6e7fdb, #8a50ff);
+  transform: translateY(-2px);
+}
+
+/* Garantir que o conteúdo tenha o espaço necessário e o footer não suba */
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Garantir que o footer tenha a altura mínima e fique no fundo */
+footer {
+  background-color: #333;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  width: 100%;
+  bottom: 0;
+  position: relative;
+  min-height: 80px;
+  margin-top: 20px;
+}
