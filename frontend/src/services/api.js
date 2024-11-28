@@ -31,3 +31,13 @@ export const register = async (email, password, perfil) => {
     throw error;
   }
 };
+
+export const fetchHomeData = async () => {
+  const token = localStorage.getItem("access_token");
+  const response = await axios.get("http://127.0.0.1:8000/api/home/", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};

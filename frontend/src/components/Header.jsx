@@ -7,8 +7,8 @@ function Header() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();
-    navigate("/"); // Redireciona para a página inicial após o logout
+    logout(); // Atualiza o estado de autenticação no contexto
+    navigate("/login"); // Redireciona para a página de login
   };
 
   return (

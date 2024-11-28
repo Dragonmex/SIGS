@@ -102,3 +102,22 @@ footer a:hover {
     align-items: flex-start; /* Alinha os itens à esquerda em telas menores */
   }
 }
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.main-content {
+  margin-top: 60px; /* Espaço para o header */
+  margin-bottom: 40px; /* Espaço para o footer */
+  min-height: calc(100vh - 100px); /* Garantir altura mínima */
+}
