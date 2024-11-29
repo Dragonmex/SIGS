@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import { refreshAccessToken } from "../services/api"; // Para renovar o token
 
 export const AuthContext = createContext();
 
@@ -6,19 +7,32 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    setIsAuthenticated(!!token); // Atualiza o estado de autenticação baseado no token
+    const checkAuth = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        try {
+          // Renova o token se necessário
+          await refreshAccessToken();
+          setIsAuthenticated(true);
+        } catch (error) {
+          console.error("Sessão expirada:", error);
+          logout();
+        }
+      }
+    };
+
+    checkAuth();
   }, []);
 
   const login = (accessToken, refreshToken) => {
-    localStorage.setItem("access_token", accessToken);
-    localStorage.setItem("refresh_token", refreshToken);
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
     setIsAuthenticated(true); // Marca como autenticado
   };
 
   const logout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     setIsAuthenticated(false); // Marca como não autenticado
   };
 

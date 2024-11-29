@@ -7,7 +7,7 @@ function Header() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout(); // Atualiza o estado de autenticação no contexto
+    logout(); // Remove os tokens do localStorage e atualiza o estado de autenticação
     navigate("/login"); // Redireciona para a página de login
   };
 
@@ -17,7 +17,7 @@ function Header() {
         <Link to="/" className="text-white text-decoration-none fs-4 fw-bold">
           Home
         </Link>
-        <div>
+        <nav>
           {!isAuthenticated ? (
             <>
               <Link to="/register" className="btn btn-outline-light me-2">
@@ -28,11 +28,16 @@ function Header() {
               </Link>
             </>
           ) : (
-            <button className="btn btn-light text-dark" onClick={handleLogout}>
-              Logout
-            </button>
+            <>
+              <Link to="/profile" className="btn btn-outline-light me-2">
+                Meu Perfil
+              </Link>
+              <button className="btn btn-light text-dark" onClick={handleLogout}>
+                Logout
+              </button>
+            </>
           )}
-        </div>
+        </nav>
       </div>
     </header>
   );

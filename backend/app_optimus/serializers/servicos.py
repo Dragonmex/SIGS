@@ -27,3 +27,27 @@ class NoticiaSerializer(serializers.ModelSerializer):
         fields = ['id', 'titulo', 'resumo', 'conteudo', 'imagem', 'data_publicacao', 'autor', 'categoria']
 
 
+class NoticiaDetalhadaSerializer(serializers.ModelSerializer):
+    categoria = serializers.StringRelatedField()
+    noticias_relacionadas = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Noticia
+        fields = [
+            'id', 'titulo', 'conteudo', 'imagem', 
+            'data_publicacao', 'autor', 'categoria', 'noticias_relacionadas'
+        ]
+
+    def get_noticias_relacionadas(self, obj):
+        # Busca as notícias relacionadas pela mesma categoria, excluindo a atual
+        relacionadas = Noticia.objects.filter(categoria=obj.categoria).exclude(id=obj.id)[:4]
+        return [
+            {
+                'id': noticia.id,
+                'titulo': noticia.titulo,
+                'resumo': noticia.resumo,
+                'imagem': noticia.imagem.url if noticia.imagem else None,
+                'data_publicacao': noticia.data_publicacao,
+            }
+            for noticia in relacionadas
+        ]

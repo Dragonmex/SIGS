@@ -16,20 +16,24 @@ const Login = () => {
     setError(""); // Limpa mensagens de erro
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/login/", {
+      const response = await axios.post("http://127.0.0.1:8000/api/token/", {
         email,
-        senha: password,
+        password, // Ajustando para o nome do campo correto
       });
-      const { access_token, refresh_token } = response.data;
+
+      const { access, refresh } = response.data;
 
       // Atualiza o contexto de autenticação
-      login(access_token, refresh_token);
+      login(access, refresh);
 
       // Redireciona para a página inicial após o login
       navigate("/");
     } catch (err) {
-      if (err.response && err.response.status !== 200) {
+      console.error("Erro ao fazer login:", err);
+      if (err.response && err.response.status === 401) {
         setError("E-mail ou senha inválidos.");
+      } else {
+        setError("Ocorreu um erro. Tente novamente mais tarde.");
       }
     }
   };

@@ -4,6 +4,9 @@ from rest_framework import status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from app_optimus.models import Servico, Noticia, CategoriaNoticia
+from django.shortcuts import get_object_or_404
+from app_optimus.serializers import NoticiaDetalhadaSerializer
+
 
 class HomeAPI(APIView):
     authentication_classes = [JWTAuthentication]
@@ -47,3 +50,12 @@ class HomeAPI(APIView):
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class NoticiaDetailView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request, noticia_id, *args, **kwargs):
+        # Busca a notícia pelo ID
+        noticia = get_object_or_404(Noticia, id=noticia_id)
+        serializer = NoticiaDetalhadaSerializer(noticia)
+        return Response(serializer.data, status=status.HTTP_200_OK)

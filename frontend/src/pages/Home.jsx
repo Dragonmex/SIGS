@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { fetchHomeData } from "../services/api";
+import { fetchHomeData } from "../services/api"; // Função para buscar os dados da API
 import "../pages/Home.css";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   // Estados para Serviços
@@ -15,11 +16,14 @@ const Home = () => {
   const [selectedCategoria, setSelectedCategoria] = useState("Todas");
 
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   // Busca dados do backend
   useEffect(() => {
-    fetchHomeData()
-      .then((data) => {
+    const loadHomeData = async () => {
+      setLoading(true); // Indica que os dados estão sendo carregados
+      try {
+        const data = await fetchHomeData();
         // Configuração dos serviços
         setServicos(data.servicos);
         setFilteredServicos(data.servicos);
@@ -30,11 +34,16 @@ const Home = () => {
 
         // Configuração das categorias de notícias
         setCategorias(data.categorias_noticias);
-      })
-      .catch((err) => {
+        setError(""); // Limpa qualquer erro anterior
+      } catch (err) {
         console.error("Erro ao carregar os dados:", err);
         setError("Erro ao carregar os dados. Tente novamente mais tarde.");
-      });
+      } finally {
+        setLoading(false); // Indica que o carregamento terminou
+      }
+    };
+
+    loadHomeData();
   }, []);
 
   // Lógica para filtro de serviços
@@ -64,6 +73,15 @@ const Home = () => {
     }
   };
 
+  // Exibição de erro ou estado de carregamento
+  if (loading) {
+    return <p>Carregando...</p>;
+  }
+
+  if (error) {
+    return <p className="error-message">{error}</p>;
+  }
+
   return (
     <div className="home-container">
       {/* Sessão de Serviços */}
@@ -78,7 +96,6 @@ const Home = () => {
         </div>
 
         <h2>O que a prefeitura pode fazer por você hoje?</h2>
-        {error && <p className="error-message">{error}</p>}
 
         <div className="cards-container">
           {filteredServicos.length > 0 ? (
@@ -133,9 +150,13 @@ const Home = () => {
                   <img src={noticia.imagem || "/placeholder-news.png"} alt="" />
                 </div>
                 <div className="noticia-conteudo">
-                  <h3>{noticia.titulo}</h3>
+                  <Link to={`/noticia/${noticia.id}`}>
+                    <h3>{noticia.titulo}</h3>
+                  </Link>
                   <p>{noticia.resumo}</p>
-                  <small>{noticia.data_publicacao}</small>
+                  <small>
+                    {new Date(noticia.data_publicacao).toLocaleDateString()}
+                  </small>
                 </div>
               </div>
             ))

@@ -345,3 +345,130 @@ footer {
   font-size: 1rem;
   color: #555;
 }
+
+/* Geral */
+.home-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Barra de busca */
+.search-bar {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.search-bar input {
+  width: 100%;
+  max-width: 600px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Cards de serviços */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.card-icon img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+.card-content h3 {
+  font-size: 20px;
+  color: #333;
+}
+
+.card-content p {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Categorias de notícias */
+.categorias-container {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.categoria-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.categoria-btn.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.categoria-btn:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Notícias */
+.noticias-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.noticia-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.noticia-imagem img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.noticia-conteudo h3 {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.noticia-conteudo p {
+  font-size: 14px;
+  color: #666;
+}
+
+.noticia-conteudo small {
+  font-size: 12px;
+  color: #aaa;
+}
