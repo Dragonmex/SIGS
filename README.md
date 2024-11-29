@@ -23,7 +23,9 @@ frontend/
 │   ├── main.js
 ├── package.json
 ├── vite.config.js
-=======
+
+```
+
 # **SIGS - Backend**
 
 Sistema Integrado de Gestão de Serviços Públicos (SIGS). Este repositório contém o back-end do projeto desenvolvido em **Python 3.10.11** com **Django** e **PostgreSQL 15**.
