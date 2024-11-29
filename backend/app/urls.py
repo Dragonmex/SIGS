@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic.base import RedirectView
+from django.views.generic import RedirectView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Rota para o painel de administração
-    path('home/', include('app_optimus.urls')),  # Inclua as rotas da API principal
-    path('', RedirectView.as_view(url='/home/', permanent=True)),  # Redireciona para /home
+    path('admin/', admin.site.urls),
+    path('', include('app_optimus.urls')),  # Inclui todas as rotas do app com o prefixo 'api/'
+    path('', RedirectView.as_view(url='/api/home/', permanent=False)),  # Redireciona para o login
 ]

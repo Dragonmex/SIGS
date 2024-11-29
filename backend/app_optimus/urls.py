@@ -1,7 +1,17 @@
 from django.urls import path
-from .views import Home
+from app_optimus.views import LoginAPI, LogoutAPI, HomeAPI, CadastroUsuarioAPI, NoticiaDetailView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
 urlpatterns = [
-    path('', Home.as_view(), name='home'),
+    path('api/login/', LoginAPI.as_view(), name='api-login'),
+    path('api/logout/', LogoutAPI.as_view(), name='api-logout'),
+    path('api/home/', HomeAPI.as_view(), name='api-home'),
+    path('api/register/', CadastroUsuarioAPI.as_view(), name='api-cadastro'),
+    path('api/noticia/<int:noticia_id>/', NoticiaDetailView.as_view(), name='api-noticia-detail'),
+    
+    # Obter Token
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
 ]

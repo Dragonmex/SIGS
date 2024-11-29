@@ -2,8 +2,9 @@ from django.core.management.base import BaseCommand
 from app_optimus.models import CategoriaNoticia, CategoriaServico, Noticia, Servico
 from django.utils import timezone
 
+
 class Command(BaseCommand):
-    help = "Popula o banco de dados com dados de exemplo para as tabelas principais"
+    help = "Popula o banco de dados 'conteudos_db' com dados de exemplo para as tabelas principais"
 
     def handle(self, *args, **options):
         # Limpar dados antigos
@@ -21,8 +22,10 @@ class Command(BaseCommand):
             {"nome": "Cultura", "descricao": "Eventos culturais e artísticos", "slug": "cultura"},
         ]
 
-        for categoria_data in categorias_noticias_data:
+        categorias_noticias = [
             CategoriaNoticia.objects.create(**categoria_data)
+            for categoria_data in categorias_noticias_data
+        ]
 
         # Criando categorias de serviços
         categorias_servicos_data = [
@@ -46,14 +49,14 @@ class Command(BaseCommand):
             {"nome": "Agricultura", "descricao": "Incentivo à produção agrícola e apoio rural", "slug": "agricultura"},
             {"nome": "Indústria e Comércio", "descricao": "Apoio ao desenvolvimento industrial e comercial", "slug": "industria-comercio"},
             {"nome": "Defesa Civil", "descricao": "Prevenção e resposta a desastres e emergências", "slug": "defesa-civil"},
-]
+        ]
 
-        for categoria_data in categorias_servicos_data:
+        categorias_servicos = [
             CategoriaServico.objects.create(**categoria_data)
+            for categoria_data in categorias_servicos_data
+        ]
 
         # Criando 10 notícias
-        categorias_noticias = list(CategoriaNoticia.objects.all())
-        # Criando notícias
         noticias_data = [
     {
         "titulo": "Governo Municipal Lança Novo Programa de Saúde Preventiva",
@@ -127,12 +130,12 @@ class Command(BaseCommand):
     },
     ]
 
+
         for i, noticia_data in enumerate(noticias_data):
-            noticia_data["categoria"] = categorias_noticias[i % len(categorias_noticias)]
+            noticia_data["categoria"] = categorias_noticias[i % len(categorias_noticias)]  # Garantir que cada notícia tenha categoria
             Noticia.objects.create(**noticia_data)
 
         # Criando 10 serviços
-        categorias_servicos = list(CategoriaServico.objects.all())
         servicos_data = [
             {"nome": "Consulta Médica", "descricao": "Agendamento de consultas médicas em unidades de saúde.", "categoria": CategoriaServico.objects.get(slug="saude")},
             {"nome": "Matrícula Escolar", "descricao": "Serviço de matrícula para escolas públicas municipais.", "categoria": CategoriaServico.objects.get(slug="educacao")},
@@ -144,7 +147,7 @@ class Command(BaseCommand):
             {"nome": "Orientação para Empreendedores", "descricao": "Serviço de apoio a micro e pequenos empresários.", "categoria": CategoriaServico.objects.get(slug="industria-comercio")},
             {"nome": "Inscrição para Eventos Culturais", "descricao": "Cadastro em eventos culturais e festivais organizados pela prefeitura.", "categoria": CategoriaServico.objects.get(slug="cultura")},
             {"nome": "Esporte na Comunidade", "descricao": "Programas esportivos e recreativos em espaços públicos.", "categoria": CategoriaServico.objects.get(slug="esporte")},
-]
+        ]
 
         for servico_data in servicos_data:
             Servico.objects.create(**servico_data)

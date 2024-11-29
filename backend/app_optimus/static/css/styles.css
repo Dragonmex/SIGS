@@ -1,0 +1,77 @@
+/* Header */
+header {
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* Espaçamento do conteúdo */
+main {
+    margin-top: 50px; /* Espaço entre o header e o conteúdo */
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* Links no header */
+header a.text-decoration-none {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+header .btn {
+    font-size: 1rem;
+    padding: 5px 15px;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    header .d-flex {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    header .btn {
+        margin-top: 10px;
+    }
+}
+
+/* Fundo para a página de login */
+body {
+    background-color: #f8f9fa; /* Cinza claro */
+}
+
+/* Cartão de login */
+.card {
+    border: none; /* Remove bordas padrão */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    border-radius: 12px; /* Bordas arredondadas */
+}
+
+/* Botão de login */
+.card .btn-primary {
+    background: linear-gradient(90deg, #007bff, #0056b3); /* Gradiente azul */
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 10px;
+}
+
+/* Links adicionais */
+.card a.text-primary {
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.card a.text-primary:hover {
+    color: #003d80; /* Azul mais escuro no hover */
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .vh-100 {
+        height: auto;
+        padding: 20px;
+    }
+}
+

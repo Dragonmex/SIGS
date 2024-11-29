@@ -1,2 +1,2 @@
-from .NoticiaSerializer import NoticiaSerializer
-from .ServicoSerializer import ServicoSerializer
+from .servicos import CategoriaServicoSerializer, CategoriaNoticiaSerializer, ServicoSerializer, NoticiaSerializer, NoticiaDetalhadaSerializer
+from .usuarios import UsuarioSerializer, CidadaoSerializer, ServidorSerializer, CadastroUsuarioSerializer

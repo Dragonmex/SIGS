@@ -1,1 +1,2 @@
-from .Home import Home
+from .usuarios import LoginAPI, LogoutAPI, CadastroUsuarioAPI
+from .Home import HomeAPI, NoticiaDetailView

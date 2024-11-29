@@ -1,3 +1,29 @@
+
+# SIGS Frontend
+
+Frontend para o Sistema Integrado de Gestão Pública (SIGS), desenvolvido com React e Vite.
+
+## Scripts Disponíveis
+
+- `npm run dev`: Inicia o servidor de desenvolvimento.
+- `npm run build`: Compila o projeto para produção.
+- `npm run serve`: Prepara o servidor para visualização do build.
+
+## Estrutura do Projeto
+
+```plaintext
+frontend/
+├── public/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   ├── App.js
+│   ├── main.js
+├── package.json
+├── vite.config.js
+=======
 # **SIGS - Backend**
 
 Sistema Integrado de Gestão de Serviços Públicos (SIGS). Este repositório contém o back-end do projeto desenvolvido em **Python 3.10.11** com **Django** e **PostgreSQL 15**.
