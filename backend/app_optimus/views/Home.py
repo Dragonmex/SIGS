@@ -1,11 +1,13 @@
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from app_optimus.models import Servico, Noticia, CategoriaNoticia
 from django.shortcuts import get_object_or_404
-from app_optimus.serializers import NoticiaDetalhadaSerializer
+from app_optimus.serializers import NoticiaDetalhadaSerializer, NoticiaSerializer
+from app_optimus.pagination import CustomPageNumberPagination
 
 
 class HomeAPI(APIView):
@@ -59,3 +61,10 @@ class NoticiaDetailView(APIView):
         noticia = get_object_or_404(Noticia, id=noticia_id)
         serializer = NoticiaDetalhadaSerializer(noticia)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class NoticiaListView(ListAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    queryset = Noticia.objects.all().order_by('-data_publicacao')
+    serializer_class = NoticiaSerializer
+    pagination_class = CustomPageNumberPagination

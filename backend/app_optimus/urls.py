@@ -1,5 +1,5 @@
 from django.urls import path
-from app_optimus.views import LoginAPI, LogoutAPI, HomeAPI, CadastroUsuarioAPI, NoticiaDetailView
+from app_optimus.views import LoginAPI, LogoutAPI, HomeAPI, CadastroUsuarioAPI, NoticiaDetailView, NoticiaListView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
@@ -13,6 +13,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
     # VISUALIZAÇÃO EM DETALHES - NOTICIAS
+    path('api/noticias/', NoticiaListView.as_view(), name='api-noticias'),
     path('api/noticia/<int:noticia_id>/', NoticiaDetailView.as_view(), name='api-noticia-detail'),
 
 ]

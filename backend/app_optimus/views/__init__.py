@@ -1,2 +1,2 @@
 from .usuarios import LoginAPI, LogoutAPI, CadastroUsuarioAPI
-from .Home import HomeAPI, NoticiaDetailView
+from .Home import HomeAPI, NoticiaDetailView, NoticiaListView
