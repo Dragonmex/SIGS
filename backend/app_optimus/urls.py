@@ -8,11 +8,13 @@ urlpatterns = [
     # Autenticação
     path('api/login/', LoginAPI.as_view(), name='api-login'),
     path('api/logout/', LogoutAPI.as_view(), name='api-logout'),
-    path('api/home/', HomeAPI.as_view(), name='api-home'),
     path('api/register/', CadastroUsuarioAPI.as_view(), name='api-cadastro'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
+    # Pagina Inicial
+    path('api/home/', HomeAPI.as_view(), name='api-home'),
+    
     # Funcionalidades Dinâmicas
     path('api/', include(router_urls)),
 ]
