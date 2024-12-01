@@ -6,8 +6,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from django.core.mail import send_mail
 from django.contrib.auth.hashers import check_password
-from app_optimus.models.usuarios_models import Usuario
-from app_optimus.serializers.usuario_serializers import CadastroUsuarioSerializer
+from app_optimus.models.usuarios_models import Usuario, Cidadao, Servidor
+from app_optimus.serializers.usuario_serializers import CadastroUsuarioSerializer, CidadaoSerializer, ServidorSerializer
 
 
 class LoginAPI(APIView):

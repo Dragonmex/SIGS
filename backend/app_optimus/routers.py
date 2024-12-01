@@ -16,5 +16,6 @@ router.register(r'categorias-noticias', CategoriaNoticiaViewSet, basename='categ
 router.register(r'servicos-admin', ServicoViewSetServidor, basename='servico-servidor')
 router.register(r'noticias-admin', NoticiaViewSetServidor, basename='noticia-servidor')
 
-# Isso permite acessar as URLs registradas pelo roteador
-urlpatterns = router.urls
+# Inclui todas as rotas do roteador
+api_router = router.urls
+

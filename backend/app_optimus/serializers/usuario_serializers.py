@@ -2,6 +2,7 @@ from rest_framework import serializers
 from app_optimus.models.usuarios_models import Usuario
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
+from app_optimus.models.usuarios_models import Cidadao, Servidor
 
 
 class UsuarioSerializer(serializers.ModelSerializer):
@@ -51,3 +52,19 @@ class CadastroUsuarioSerializer(serializers.ModelSerializer):
             return Usuario.objects.create(**validated_data)
         except Exception as e:
             raise serializers.ValidationError(f"Erro ao criar usuário: {str(e)}")
+
+class CidadaoSerializer(serializers.ModelSerializer):
+    """
+    Serializer para o perfil de cidadão.
+    """
+    class Meta:
+        model = Cidadao
+        fields = ['nome_completo', 'cpf', 'data_nascimento']
+
+class ServidorSerializer(serializers.ModelSerializer):
+    """
+    Serializer para o perfil de servidor.
+    """
+    class Meta:
+        model = Servidor
+        fields = ['nome_completo', 'cargo', 'departamento']
