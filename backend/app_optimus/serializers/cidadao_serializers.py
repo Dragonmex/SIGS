@@ -1,6 +1,9 @@
 from rest_framework import serializers
-from app_optimus.models import Servico, Noticia, CategoriaServico, CategoriaNoticia
+from app_optimus.models.funcionalidades_models import Servico, Noticia, CategoriaServico, CategoriaNoticia
 
+
+
+# Serializers Genéricos para Categorias
 class CategoriaServicoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoriaServico
@@ -11,16 +14,40 @@ class CategoriaNoticiaSerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoriaNoticia
         fields = ['id', 'nome', 'descricao', 'slug']
-        
+
+
+# Serializers para Cidadão
 class ServicoSerializer(serializers.ModelSerializer):
-    categoria = serializers.StringRelatedField()  # Mostra o nome da categoria no lugar do ID
+    categoria = serializers.StringRelatedField()
 
     class Meta:
         model = Servico
         fields = ['id', 'nome', 'descricao', 'status', 'data_criacao', 'categoria']
 
+
+class ServicoDetalhadoSerializer(serializers.ModelSerializer):
+    categoria = serializers.StringRelatedField()
+    servicos_relacionados = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Servico
+        fields = ['id', 'nome', 'descricao', 'status', 'data_criacao', 'categoria', 'servicos_relacionados']
+
+    def get_servicos_relacionados(self, obj):
+        relacionados = Servico.objects.filter(categoria=obj.categoria).exclude(id=obj.id)[:4]
+        return [
+            {
+                'id': servico.id,
+                'nome': servico.nome,
+                'descricao': servico.descricao,
+                'data_criacao': servico.data_criacao,
+            }
+            for servico in relacionados
+        ]
+
+
 class NoticiaSerializer(serializers.ModelSerializer):
-    categoria = serializers.StringRelatedField()  # Mostra o nome da categoria no lugar do ID
+    categoria = serializers.StringRelatedField()
 
     class Meta:
         model = Noticia
@@ -39,7 +66,6 @@ class NoticiaDetalhadaSerializer(serializers.ModelSerializer):
         ]
 
     def get_noticias_relacionadas(self, obj):
-        # Busca as notícias relacionadas pela mesma categoria, excluindo a atual
         relacionadas = Noticia.objects.filter(categoria=obj.categoria).exclude(id=obj.id)[:4]
         return [
             {

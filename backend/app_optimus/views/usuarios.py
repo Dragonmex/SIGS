@@ -3,30 +3,30 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
-from app_optimus.models import Usuario
-from app_optimus.serializers import CadastroUsuarioSerializer
+from app_optimus.models.usuarios_models import Usuario
+from app_optimus.serializers.usuario_serializers import CadastroUsuarioSerializer
 
 class LoginAPI(APIView):
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
-        senha = request.data.get('senha')
+        password = request.data.get('password')  # Alterado para 'password'
 
-        if not email or not senha:
+        if not email or not password:
             return Response({'error': 'E-mail e senha são obrigatórios.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             usuario = Usuario.objects.get(email=email)
-            if check_password(senha, usuario.password):
-            # Gerar tokens JWT
+            if check_password(password, usuario.password):  # Alterado para 'password'
+                # Gerar tokens JWT
                 refresh = RefreshToken.for_user(usuario)
                 refresh['user_id'] = str(usuario.id_usuario)  # Adiciona manualmente o campo `user_id` no payload do token
 
                 return Response({
                     'access_token': str(refresh.access_token),
-                    'refresh_token': str(refresh),  # O token de refresh completo
+                    'refresh_token': str(refresh),
                     'perfil': usuario.perfil,
                     'id_usuario': str(usuario.id_usuario),
-    }, status=status.HTTP_200_OK)
+                }, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'Senha inválida.'}, status=status.HTTP_401_UNAUTHORIZED)
         except Usuario.DoesNotExist:

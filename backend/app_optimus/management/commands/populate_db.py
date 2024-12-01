@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from app_optimus.models import CategoriaNoticia, CategoriaServico, Noticia, Servico
+from app_optimus.models.funcionalidades_models import CategoriaNoticia, CategoriaServico, Noticia, Servico
 from django.utils import timezone
 
 
