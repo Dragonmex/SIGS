@@ -19,3 +19,4 @@ router.register(r'noticias-admin', NoticiaViewSetServidor, basename='noticia-ser
 # Inclui todas as rotas do roteador
 api_router = router.urls
 
+
