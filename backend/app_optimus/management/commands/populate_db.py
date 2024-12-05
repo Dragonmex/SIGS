@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from app_optimus.models.funcionalidades_models import CategoriaNoticia, CategoriaServico, Noticia, Servico
+from app_optimus.models.funcionalidades_models import CategoriaNoticia, CategoriaServico, Noticia, Servico, ServicoEtapa
 from django.utils import timezone
 
 
@@ -135,21 +135,72 @@ class Command(BaseCommand):
             noticia_data["categoria"] = categorias_noticias[i % len(categorias_noticias)]  # Garantir que cada notícia tenha categoria
             Noticia.objects.create(**noticia_data)
 
-        # Criando 10 serviços
+        # Criando 05 serviços
         servicos_data = [
-            {"nome": "Consulta Médica", "descricao": "Agendamento de consultas médicas em unidades de saúde.", "categoria": CategoriaServico.objects.get(slug="saude")},
-            {"nome": "Matrícula Escolar", "descricao": "Serviço de matrícula para escolas públicas municipais.", "categoria": CategoriaServico.objects.get(slug="educacao")},
-            {"nome": "Bilhete Único", "descricao": "Emissão de cartões para transporte público com integração tarifária.", "categoria": CategoriaServico.objects.get(slug="transporte")},
-            {"nome": "Patrulhamento de Bairros", "descricao": "Rondas de segurança realizadas pela guarda municipal.", "categoria": CategoriaServico.objects.get(slug="seguranca")},
-            {"nome": "Cadastro para Auxílio Social", "descricao": "Inscrição em programas de apoio a famílias em situação de vulnerabilidade.", "categoria": CategoriaServico.objects.get(slug="assistencia-social")},
-            {"nome": "Solicitação de Obras", "descricao": "Registro de solicitações de pavimentação e melhorias urbanas.", "categoria": CategoriaServico.objects.get(slug="infraestrutura")},
-            {"nome": "Cadastro Ambiental Rural (CAR)", "descricao": "Regularização ambiental de propriedades rurais.", "categoria": CategoriaServico.objects.get(slug="meio-ambiente")},
-            {"nome": "Orientação para Empreendedores", "descricao": "Serviço de apoio a micro e pequenos empresários.", "categoria": CategoriaServico.objects.get(slug="industria-comercio")},
-            {"nome": "Inscrição para Eventos Culturais", "descricao": "Cadastro em eventos culturais e festivais organizados pela prefeitura.", "categoria": CategoriaServico.objects.get(slug="cultura")},
-            {"nome": "Esporte na Comunidade", "descricao": "Programas esportivos e recreativos em espaços públicos.", "categoria": CategoriaServico.objects.get(slug="esporte")},
-        ]
+    {
+        "nome": "Consulta Médica",
+        "descricao": "Agendamento de consultas médicas em unidades de saúde.",
+        "categoria": CategoriaServico.objects.get(slug="saude"),
+        "etapas": [
+            {"nome": "Agendamento", "descricao": "Realize o agendamento da consulta na unidade de saúde."},
+            {"nome": "Confirmação de Documentos", "descricao": "Leve os documentos necessários no dia da consulta."},
+            {"nome": "Consulta com Médico", "descricao": "Compareça à unidade para a consulta agendada."},
+        ],
+    },
+    {
+        "nome": "Matrícula Escolar",
+        "descricao": "Serviço de matrícula para escolas públicas municipais.",
+        "categoria": CategoriaServico.objects.get(slug="educacao"),
+        "etapas": [
+            {"nome": "Preenchimento do Cadastro", "descricao": "Forneça os dados do aluno e responsáveis."},
+            {"nome": "Envio de Documentos", "descricao": "Envie cópias dos documentos necessários para matrícula."},
+            {"nome": "Confirmação da Matrícula", "descricao": "Receba a confirmação da matrícula pela secretaria."},
+        ],
+    },
+    {
+        "nome": "Bilhete Único",
+        "descricao": "Emissão de cartões para transporte público com integração tarifária.",
+        "categoria": CategoriaServico.objects.get(slug="transporte"),
+        "etapas": [
+            {"nome": "Cadastro no Sistema", "descricao": "Realize o cadastro no sistema de transporte público."},
+            {"nome": "Envio de Foto e Documentos", "descricao": "Envie uma foto recente e documentos de identificação."},
+            {"nome": "Recebimento do Bilhete", "descricao": "Aguarde a entrega do bilhete único no endereço informado."},
+        ],
+    },
+    {
+        "nome": "Patrulhamento de Bairros",
+        "descricao": "Rondas de segurança realizadas pela guarda municipal.",
+        "categoria": CategoriaServico.objects.get(slug="seguranca"),
+        "etapas": [
+            {"nome": "Solicitação de Patrulhamento", "descricao": "Registre uma solicitação na central de segurança."},
+            {"nome": "Avaliação da Solicitação", "descricao": "A central avalia e designa a ronda para o bairro."},
+            {"nome": "Realização da Ronda", "descricao": "Equipe realiza a ronda no bairro em horários definidos."},
+        ],
+    },
+    {
+        "nome": "Cadastro para Auxílio Social",
+        "descricao": "Inscrição em programas de apoio a famílias em situação de vulnerabilidade.",
+        "categoria": CategoriaServico.objects.get(slug="assistencia-social"),
+        "etapas": [
+            {"nome": "Preenchimento do Cadastro", "descricao": "Informe os dados pessoais e familiares."},
+            {"nome": "Entrevista com Assistente Social", "descricao": "Agende e participe da entrevista de avaliação."},
+            {"nome": "Aprovação e Recebimento do Benefício", "descricao": "Aguarde a aprovação e receba o benefício."},
+        ],
+    },
+]
 
         for servico_data in servicos_data:
-            Servico.objects.create(**servico_data)
+            # Criação do serviço
+            etapas = servico_data.pop("etapas")  # Remove etapas do dicionário principal
+            servico = Servico.objects.create(**servico_data)
+
+        # Adicionando etapas para o serviço
+            for ordem, etapa_data in enumerate(etapas, start=1):
+                ServicoEtapa.objects.create(
+                    servico=servico,
+                    nome=etapa_data["nome"],
+                    descricao=etapa_data["descricao"],
+                    ordem=ordem,
+                )
 
         self.stdout.write(self.style.SUCCESS("Banco de dados populado com sucesso!"))
