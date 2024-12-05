@@ -133,5 +133,23 @@ class SolicitacaoEtapa(models.Model):
     def __str__(self):
         return f"{self.nome_etapa} ({'Concluída' if self.concluida else 'Pendente'})"
 
+#OUVIDORIA 
 
+class Ouvidoria(models.Model):
+    TIPOS_CHOICES = [
+        ('DENUNCIA','Denúncia'),
+        ('SUGESTAO', 'Sugestão'),
+        ('ELOGIO', 'Elogio'),
+        ('OUTRO', 'Outro'),
+    ]
+
+    tipo = models.CharField(max_length= 10, choices = TIPOS_CHOICES)
+    descricao = models.TextField()
+    data_criacao=models.DateTimeField(auto_now_add=True)
+    status=models.CharField(max_length=20, default='PENDENTE')
+    cidadao = models.ForeignKey('Cidadao', on_delete=models.SET_NULL, null=True, blank=True)
+    servidor = models.ForeignKey('Servidor', on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.tipo} - {self.status} - {self.data_criacao}'
 

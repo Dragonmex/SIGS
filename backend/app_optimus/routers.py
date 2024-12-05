@@ -3,12 +3,13 @@ from app_optimus.views.servicos import ServicoViewSetCidadao, ServicoViewSetServ
 from app_optimus.views.noticias import NoticiaViewSetCidadao, NoticiaViewSetServidor
 from app_optimus.views.categorias import CategoriaServicoViewSet, CategoriaNoticiaViewSet
 from app_optimus.views.servicos import SolicitacaoServicoViewSet, SolicitacaoServidorViewSet
-
+from .views import OuvidoriaViewSet
 
 # Instância do roteador
 router = DefaultRouter()
 
 # Rotas em Comum
+router.register(r'ouvidorias', OuvidoriaViewSet, basename='ouvidoria')
 router.register(r'servicos', ServicoViewSetCidadao, basename='servico-cidadao')
 router.register(r'noticias', NoticiaViewSetCidadao, basename='noticia-cidadao')
 router.register(r'solicitacoes', SolicitacaoServicoViewSet, basename='solicitacoes')
@@ -23,3 +24,4 @@ router.register(r'solicitacoes-admin', SolicitacaoServidorViewSet, basename='sol
 
 # Inclui todas as rotas do roteador
 api_router = router.urls
+
