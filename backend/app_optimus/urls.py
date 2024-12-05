@@ -1,14 +1,12 @@
 from django.urls import path, include
 from app_optimus.routers import api_router
 from app_optimus.views.usuarios import LoginAPI, LogoutAPI, CadastroUsuarioAPI, AlterarSenhaAPI, RedefinirSenhaAPI, ConfirmarRedefinicaoSenhaAPI
-from app_optimus.views.Home import HomeAPI
+from app_optimus.views.home import HomeAPI
 from app_optimus.views.perfil import PerfilAPI
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.routers import DefaultRouter
-from .views import OuvidoriaViewSet
 
 router = DefaultRouter()
-router.register(r'ouvidorias', OuvidoriaViewSet, basename='ouvidoria')
 
 # URLs Globais
 urlpatterns = [

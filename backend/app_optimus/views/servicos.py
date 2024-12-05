@@ -1,5 +1,6 @@
 from django.utils import timezone
 from rest_framework.viewsets import ViewSet, ModelViewSet
+from django.utils.timezone import now
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
@@ -10,7 +11,7 @@ from app_optimus.serializers.cidadao_serializers import (
     ServicoSerializer, ServicoDetalhadoSerializer, CriarSolicitacaoServicoSerializer, SolicitacaoServicoSerializer
 )
 from app_optimus.serializers.servidor_serializers import (
-    ServicoAdminSerializer, ServicoAdminDetalhadoSerializer, ServicoEtapaAdminSerializer, SolicitacaoServidorSerializer
+    ServicoAdminSerializer, ServicoAdminDetalhadoSerializer, ServicoEtapaAdminSerializer, SolicitacaoServidorSerializer, SolicitacaoCompactaSerializer
 )
 
 class ServicoViewSetCidadao(ViewSet):
@@ -164,7 +165,9 @@ class SolicitacaoServicoViewSet(ModelViewSet):
 
     def get_queryset(self):
         """
-        Filtrar solicitações com base no perfil do usuário.
+        Filtra solicitações com base no perfil do usuário.
+        - Usuários regulares (cidadãos) visualizam apenas suas solicitações.
+        - Servidores visualizam todas as solicitações.
         """
         usuario = self.request.user
         if usuario.perfil == 'servidor':
@@ -175,6 +178,8 @@ class SolicitacaoServicoViewSet(ModelViewSet):
         """
         Define o serializer baseado na ação.
         """
+        if self.action == 'list':
+            return SolicitacaoCompactaSerializer
         if self.action == 'create':
             return CriarSolicitacaoServicoSerializer
         if self.request.user.perfil == 'servidor':
@@ -208,54 +213,22 @@ class SolicitacaoServicoViewSet(ModelViewSet):
 
         return Response({'mensagem': 'Solicitação atualizada com sucesso.'})
 
-    @action(detail=False, methods=['get'], url_path='pendentes-ou-andamento')
-    def listar_pendentes_ou_andamento(self, request):
-        """
-        Lista solicitações pendentes ou em andamento (servidores).
-        """
-        if request.user.perfil != 'servidor':
-            return Response({'error': 'Permissão negada.'}, status=status.HTTP_403_FORBIDDEN)
-
-        status_filter = request.query_params.get('status', None)
-        page = int(request.query_params.get('page', 1))
-        limit = int(request.query_params.get('limit', 10))
-        offset = (page - 1) * limit
-
-        queryset = SolicitacaoServico.objects.filter(status__in=['pendente', 'em_andamento'])
-        if status_filter:
-            queryset = queryset.filter(status=status_filter)
-
-        total = queryset.count()
-        queryset = queryset[offset:offset + limit]
-
-        serializer = SolicitacaoServidorSerializer(queryset, many=True)
-        return Response({
-            "total": total,
-            "page": page,
-            "limit": limit,
-            "solicitacoes": serializer.data
-        })
-
     @action(detail=True, methods=['put'], url_path='etapas/(?P<etapa_pk>[^/.]+)')
     def concluir_etapa(self, request, pk=None, etapa_pk=None):
         """
         Marca uma etapa como concluída.
         """
         try:
-            # Usar solicitacao_id para acessar o relacionamento corretamente
             etapa = SolicitacaoEtapa.objects.get(pk=etapa_pk, solicitacao_id=pk)
         except SolicitacaoEtapa.DoesNotExist:
             return Response({'error': 'Etapa não encontrada.'}, status=status.HTTP_404_NOT_FOUND)
 
-        # Atualizar os campos da etapa
         etapa.concluida = request.data.get('concluida', False)
-        etapa.data_conclusao = timezone.now() if etapa.concluida else None
+        etapa.data_conclusao = now() if etapa.concluida else None
         etapa.save()
 
         return Response({'mensagem': 'Etapa marcada como concluída.'})
-
-
-
+    
 class SolicitacaoServidorViewSet(ViewSet):
     """
     ViewSet para gerenciamento de solicitações pelos servidores.

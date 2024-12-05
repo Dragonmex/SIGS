@@ -131,3 +131,19 @@ class SolicitacaoServidorSerializer(serializers.ModelSerializer):
             }
             for etapa in etapas
         ]
+        
+class SolicitacaoCompactaSerializer(serializers.ModelSerializer):
+    usuario = serializers.CharField(source='id_usuario.email', read_only=True)
+    servico = serializers.CharField(source='id_servico.nome', read_only=True)
+    etapas_concluidas = serializers.SerializerMethodField()
+    total_etapas = serializers.SerializerMethodField()
+
+    class Meta:
+        model = SolicitacaoServico
+        fields = ['id', 'usuario', 'servico', 'status', 'etapas_concluidas', 'total_etapas']
+
+    def get_etapas_concluidas(self, obj):
+        return obj.etapas.filter(concluida=True).count()
+
+    def get_total_etapas(self, obj):
+        return obj.etapas.count()
