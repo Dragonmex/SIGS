@@ -17,7 +17,7 @@ urlpatterns = [
     path('api/perfil/', PerfilAPI.as_view(), name='perfil'),
     path('api/alterar-senha/', AlterarSenhaAPI.as_view(), name='alterar-senha'),
     path('api/redefinir-senha/', RedefinirSenhaAPI.as_view(), name='redefinir-senha'),
-    path('api/confirmar-redefinicao-senha/', ConfirmarRedefinicaoSenhaAPI.as_view(), name='confirmar-redefinicao-senha'),
+    path('api/redefinicao-senha/', ConfirmarRedefinicaoSenhaAPI.as_view(), name='redefinicao-senha'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     #path('admin/', admin.site.urls),
