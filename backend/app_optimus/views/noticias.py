@@ -8,7 +8,7 @@ from app_optimus.serializers.servidor_serializers import NoticiaAdminSerializer
 from app_optimus.serializers.cidadao_serializers import NoticiaSerializer, NoticiaDetalhadaSerializer
 
 class NoticiaViewSetCidadao(ViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     def list(self, request):
         queryset = Noticia.objects.order_by('-data_publicacao')

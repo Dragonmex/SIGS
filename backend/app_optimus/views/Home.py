@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+from django.contrib.auth.models import AnonymousUser
 from app_optimus.models.funcionalidades_models import Servico, Noticia, CategoriaNoticia
 from app_optimus.serializers.cidadao_serializers import ServicoSerializer as ServicoCidadaoSerializer, NoticiaSerializer as NoticiaCidadaoSerializer
 from app_optimus.serializers.servidor_serializers import ServicoAdminSerializer as ServicoServidorSerializer, NoticiaAdminSerializer as NoticiaServidorSerializer
@@ -10,22 +10,27 @@ class HomeAPI(APIView):
     """
     HomeAPI adaptada para exibir dados personalizados com base no perfil do usuário.
     """
-    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         try:
             # Dados comuns
             categorias_noticias = CategoriaNoticia.objects.all()
 
+            # Simular perfil padrão para usuários não autenticados
+            if isinstance(request.user, AnonymousUser):
+                perfil = 'cidadao'  # Perfil padrão para usuários anônimos
+            else:
+                perfil = request.user.perfil
+
             # Lógica baseada no perfil do usuário
-            if request.user.perfil == 'cidadao':
+            if perfil == 'cidadao':
                 servicos = Servico.objects.filter(status=True).order_by('-data_criacao')[:6]
                 noticias = Noticia.objects.order_by('-data_publicacao')[:6]
 
                 servico_serializer = ServicoCidadaoSerializer(servicos, many=True)
                 noticia_serializer = NoticiaCidadaoSerializer(noticias, many=True)
 
-            elif request.user.perfil == 'servidor':
+            elif perfil == 'servidor':
                 servicos = Servico.objects.all().order_by('-data_criacao')[:6]
                 noticias = Noticia.objects.order_by('-data_publicacao')[:6]
 

@@ -18,7 +18,7 @@ class ServicoViewSetCidadao(ViewSet):
     """
     ViewSet específico para Serviços acessados por Cidadãos.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     def list(self, request):
         """
