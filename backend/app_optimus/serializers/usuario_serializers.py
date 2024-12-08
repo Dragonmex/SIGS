@@ -1,8 +1,7 @@
 from rest_framework import serializers
-from app_optimus.models.usuarios_models import Usuario
+from app_optimus.models.usuarios_models import Usuario, Cidadao, Servidor
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
-from app_optimus.models.usuarios_models import Cidadao, Servidor
 
 
 class UsuarioSerializer(serializers.ModelSerializer):
@@ -16,11 +15,15 @@ class UsuarioSerializer(serializers.ModelSerializer):
 
 class CadastroUsuarioSerializer(serializers.ModelSerializer):
     """
-    Serializer para criar novos usuários, com validação de senha e perfil.
+    Serializer para criar novos usuários, com validação de senha.
+    Inclui a criação do perfil de cidadão automaticamente.
     """
+    nome_completo = serializers.CharField(write_only=True)
+    cpf = serializers.CharField(write_only=True)
+
     class Meta:
         model = Usuario
-        fields = ['email', 'password', 'perfil']
+        fields = ['email', 'password', 'nome_completo', 'cpf']
         extra_kwargs = {
             'password': {'write_only': True},  # Oculta o campo de senha na resposta
         }
@@ -31,27 +34,39 @@ class CadastroUsuarioSerializer(serializers.ModelSerializer):
         """
         if len(value) < 8:
             raise ValidationError("A senha deve ter pelo menos 8 caracteres.")
-        # Adicionar validações adicionais conforme necessário (números, caracteres especiais, etc.)
         return value
 
-    def validate_perfil(self, value):
+    def validate_cpf(self, value):
         """
-        Valida o perfil para garantir que seja um valor permitido.
+        Valida o CPF para garantir que não está duplicado.
         """
-        valid_profiles = [choice[0] for choice in Usuario.PERFIL_CHOICES]
-        if value not in valid_profiles:
-            raise ValidationError(f"Perfil inválido. Escolha um dos seguintes: {', '.join(valid_profiles)}.")
+        if Cidadao.objects.filter(cpf=value).exists():
+            raise ValidationError("O CPF informado já está cadastrado.")
         return value
 
     def create(self, validated_data):
         """
-        Cria um novo usuário com senha criptografada.
+        Cria um novo usuário e o associa a um Cidadão.
         """
+        nome_completo = validated_data.pop('nome_completo')
+        cpf = validated_data.pop('cpf')
+
+        # Cria o usuário
         validated_data['password'] = make_password(validated_data['password'])
-        try:
-            return Usuario.objects.create(**validated_data)
-        except Exception as e:
-            raise serializers.ValidationError(f"Erro ao criar usuário: {str(e)}")
+        usuario = Usuario.objects.create(perfil='cidadao', **validated_data)
+
+        # Cria o perfil de cidadão
+        Cidadao.objects.create(usuario=usuario, nome_completo=nome_completo, cpf=cpf)
+
+        return usuario
+
+    def validate_email(self, value):
+        """
+        Verifica se o e-mail já está cadastrado.
+        """
+        if Usuario.objects.filter(email=value).exists():
+            raise ValidationError("O e-mail informado já está cadastrado.")
+        return value
 
 class CidadaoSerializer(serializers.ModelSerializer):
     """
@@ -60,6 +75,7 @@ class CidadaoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cidadao
         fields = ['nome_completo', 'cpf', 'data_nascimento']
+
 
 class ServidorSerializer(serializers.ModelSerializer):
     """

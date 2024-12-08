@@ -44,7 +44,6 @@ class HomeAPI(APIView):
             data = {
                 'servicos': servico_serializer.data,
                 'noticias': noticia_serializer.data,
-                'categorias_noticias': [{'id': categoria.id, 'nome': categoria.nome} for categoria in categorias_noticias],
             }
 
             return Response(data, status=status.HTTP_200_OK)

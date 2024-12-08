@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-@#+9q_#nz!=15y(ljl=ulrjk$_@1ku^-&1s2=33$)x2rx*=bk8
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.0.24.15', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.3.21', 'localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -36,8 +36,8 @@ INSTALLED_APPS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://10.0.24.69:3000",  # Adicione as origens necessárias
+    "http://192.168.3.5",  # IP do frontend
+    "http://localhost:3000",  # Para teste local (opcional)
 ]
 
 MIDDLEWARE = [

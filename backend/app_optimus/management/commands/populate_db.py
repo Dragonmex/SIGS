@@ -64,6 +64,7 @@ class Command(BaseCommand):
         "conteudo": "O programa de saúde preventiva lançado pela Prefeitura inclui campanhas de vacinação, check-ups gratuitos em postos de saúde e palestras sobre bem-estar. O objetivo é reduzir os casos de doenças evitáveis e melhorar a qualidade de vida da população. Segundo o prefeito, a ação também visa desafogar o sistema de saúde da cidade.",
         "autor": "Equipe de Comunicação",
         "data_publicacao": timezone.now(),
+        "imagem": "https://images.unsplash.com/photo-1495364141860-b0d03eccd065?q=80&w=2676&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
         "titulo": "Escolas Municipais Recebem Investimento de R$ 5 Milhões",
@@ -71,6 +72,7 @@ class Command(BaseCommand):
         "conteudo": "A Prefeitura anunciou um investimento recorde em educação para reformar escolas, construir novas salas de aula e adquirir equipamentos tecnológicos. A ação beneficiará cerca de 30 mil alunos da rede municipal. Segundo a secretária de educação, as reformas começarão ainda este semestre.",
         "autor": "Assessoria de Imprensa",
         "data_publicacao": timezone.now(),
+        "imagem": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
         "titulo": "Prefeitura Organiza Festival Cultural com Entrada Gratuita",
@@ -78,6 +80,7 @@ class Command(BaseCommand):
         "conteudo": "O Festival Cultural, que acontecerá na praça central da cidade, reunirá artistas locais e regionais. A iniciativa tem como objetivo promover a cultura e valorizar os talentos locais. Estima-se que cerca de 10 mil pessoas compareçam ao evento durante o final de semana.",
         "autor": "Departamento de Cultura",
         "data_publicacao": timezone.now(),
+        "imagem": "https://images.unsplash.com/flagged/photo-1572213426852-0e4ed8f41ff6?q=80&w=2674&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
         "titulo": "Projeto de Arborização Planta Mil Árvores em Bairros Carentes",
@@ -85,6 +88,7 @@ class Command(BaseCommand):
         "conteudo": "A Prefeitura iniciou o projeto de arborização urbana com o plantio de mil árvores em bairros com baixa cobertura vegetal. A ação busca melhorar a qualidade do ar e proporcionar mais áreas verdes para a população. Moradores também receberam orientações sobre cuidados com as mudas.",
         "autor": "Secretaria de Meio Ambiente",
         "data_publicacao": timezone.now(),
+        "imagem": "https://www.pensarcursos.com.br/blog/wp-content/uploads/2024/12/Concurso-Pub-3-2-750x430.png",
     },
     {
         "titulo": "Nova Linha de Ônibus Reduz Tempo de Deslocamento em 30%",
@@ -92,6 +96,7 @@ class Command(BaseCommand):
         "conteudo": "A Prefeitura anunciou a criação de uma nova linha de ônibus para atender moradores de áreas periféricas. Com trajetos mais curtos e maior frequência, a medida promete reduzir significativamente o tempo de deslocamento até o centro da cidade.",
         "autor": "Assessoria de Transporte",
         "data_publicacao": timezone.now(),
+        "imagem": "https://www.cosemssp.org.br/wp-content/uploads/2019/06/CAMPANHA-INFLUENZA-01.jpg",
     },
     {
         "titulo": "Campanha de Vacinação Contra Gripe Atinge 80% do Público-Alvo",
@@ -99,6 +104,7 @@ class Command(BaseCommand):
         "conteudo": "A Prefeitura comemorou o sucesso da campanha de vacinação contra a gripe. Postos de saúde e unidades móveis foram mobilizados para imunizar moradores em diversas regiões. A meta de vacinar 100% do público-alvo deve ser alcançada nos próximos dias.",
         "autor": "Secretaria de Saúde",
         "data_publicacao": timezone.now(),
+        "imagem": "https://i0.wp.com/diariodotransporte.com.br/wp-content/uploads/2022/07/WhatsApp-Image-2022-07-30-at-09.52.28-1-e1659186466945.jpeg?fit=799%2C599&ssl=1",
     },
     {
         "titulo": "Concurso Público Abre 200 Vagas para Diversas Áreas",
@@ -106,6 +112,7 @@ class Command(BaseCommand):
         "conteudo": "A Prefeitura abriu inscrições para um novo concurso público com salários que variam de R$ 1.500 a R$ 8.000. Os candidatos terão até o final do mês para se inscrever. O edital completo está disponível no site oficial da Prefeitura.",
         "autor": "Departamento de Recursos Humanos",
         "data_publicacao": timezone.now(),
+        "imagem": "https://rioplantas.com.br/wp-content/uploads/2021/04/arborizacao-urbana.jpg",
     },
     {
         "titulo": "Mutirão de Limpeza Remove 50 Toneladas de Resíduos",
@@ -113,6 +120,7 @@ class Command(BaseCommand):
         "conteudo": "Com o apoio de moradores e organizações locais, a Prefeitura realizou um mutirão para recolher resíduos e promover a conscientização sobre descarte adequado de lixo. Além da coleta, os participantes receberam orientações sobre reciclagem e sustentabilidade.",
         "autor": "Secretaria de Infraestrutura",
         "data_publicacao": timezone.now(),
+        "imagem": "https://www.pmvc.ba.gov.br/wp-content/uploads/sem-t%C3%ADtulo-0725-1.jpg",
     },
     {
         "titulo": "Prefeitura Reduz Taxa de Licenciamento para Pequenos Negócios",
@@ -120,6 +128,7 @@ class Command(BaseCommand):
         "conteudo": "Empreendedores locais comemoraram a redução da taxa de licenciamento para pequenos negócios, anunciada pela Prefeitura. A medida é válida para empresas com faturamento anual de até R$ 120 mil e pretende estimular a economia local.",
         "autor": "Secretaria de Desenvolvimento Econômico",
         "data_publicacao": timezone.now(),
+        "imagem": "https://www.lucasdorioverde.mt.gov.br/arquivos/noticias/13127/g/pref_lrv.jpg",
     },
     {
         "titulo": "Obras de Pavimentação São Concluídas em Tempo Recorde",
@@ -127,6 +136,7 @@ class Command(BaseCommand):
         "conteudo": "A Prefeitura entregou as obras de pavimentação em quatro bairros, melhorando a mobilidade urbana e valorizando os imóveis da região. As obras, iniciadas há três meses, foram concluídas antes do prazo previsto.",
         "autor": "Assessoria de Infraestrutura",
         "data_publicacao": timezone.now(),
+        "imagem": "https://saoluis.ma.gov.br/midias/2021/grandes/up_ag_34929_9d6dc053-03b2-8d00-2334-75ffaba3a7eb.jpg",
     },
     ]
 

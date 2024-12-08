@@ -10,14 +10,14 @@ router = DefaultRouter()
 
 # Rotas em Comum
 router.register(r'ouvidorias', OuvidoriaViewSet, basename='ouvidoria')
-router.register(r'servicos', ServicoViewSetCidadao, basename='servico-cidadao')
+router.register(r'services', ServicoViewSetCidadao, basename='servico-cidadao')
 router.register(r'noticias', NoticiaViewSetCidadao, basename='noticia-cidadao')
 router.register(r'solicitacoes', SolicitacaoServicoViewSet, basename='solicitacoes')
-router.register(r'categorias-servicos', CategoriaServicoViewSet, basename='categoria-servico')
+router.register(r'categorias-services', CategoriaServicoViewSet, basename='categoria-servico')
 router.register(r'categorias-noticias', CategoriaNoticiaViewSet, basename='categoria-noticia')
 
 # Rotas Exclusivas para servidores
-router.register(r'servicos-admin', ServicoViewSetServidor, basename='servico-servidor')
+router.register(r'services-admin', ServicoViewSetServidor, basename='servico-servidor')
 router.register(r'noticias-admin', NoticiaViewSetServidor, basename='noticia-servidor')
 router.register(r'solicitacoes-admin', SolicitacaoServidorViewSet, basename='solicitacoes-servidor')
 

@@ -1,26 +1,28 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from django.core.mail import send_mail
 from django.contrib.auth.hashers import check_password
-from app_optimus.models.usuarios_models import Usuario, Cidadao, Servidor
-from app_optimus.serializers.usuario_serializers import CadastroUsuarioSerializer, CidadaoSerializer, ServidorSerializer
+from app_optimus.models.usuarios_models import Usuario, Cidadao
+from app_optimus.serializers.usuario_serializers import CadastroUsuarioSerializer, CidadaoSerializer
 
 
 class LoginAPI(APIView):
+    """
+    API para autenticação de usuários.
+    """
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
-        password = request.data.get('password')  # Alterado para 'password'
+        password = request.data.get('password')
 
         if not email or not password:
             return Response({'error': 'E-mail e senha são obrigatórios.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             usuario = Usuario.objects.get(email=email)
-            if check_password(password, usuario.password):  # Alterado para 'password'
+            if check_password(password, usuario.password):
                 # Gerar tokens JWT
                 refresh = RefreshToken.for_user(usuario)
                 refresh['user_id'] = str(usuario.id_usuario)  # Adiciona manualmente o campo `user_id` no payload do token
@@ -38,6 +40,9 @@ class LoginAPI(APIView):
 
 
 class LogoutAPI(APIView):
+    """
+    API para realizar logout.
+    """
     def post(self, request, *args, **kwargs):
         refresh_token = request.data.get('refresh_token')
         if not refresh_token:
@@ -49,37 +54,39 @@ class LogoutAPI(APIView):
             return Response({'success': 'Logout realizado com sucesso.'}, status=status.HTTP_200_OK)
         except Exception:
             return Response({'error': 'Token inválido.'}, status=status.HTTP_400_BAD_REQUEST)
-        
+
+
 class CadastroUsuarioAPI(APIView):
     def post(self, request, *args, **kwargs):
-        # Usando o serializer para validar os dados
         serializer = CadastroUsuarioSerializer(data=request.data)
-        
+
         if serializer.is_valid():
             try:
-                # Salvando o novo usuário
                 serializer.save()
                 return Response(
                     {"message": "Cadastro realizado com sucesso!"},
                     status=status.HTTP_201_CREATED
                 )
             except Exception as e:
-                # Exceção para erros ao salvar
+                if "duplicate key value violates unique constraint" in str(e):
+                    return Response(
+                        {"error": "O e-mail informado já está cadastrado."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
                 return Response(
                     {"error": f"Erro interno ao salvar o usuário: {str(e)}"},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
         else:
-            # Caso os dados não sejam válidos, retornamos o erro
             return Response(
                 {"errors": serializer.errors},
                 status=status.HTTP_400_BAD_REQUEST
             )
-            
-            
+
+
 class AlterarSenhaAPI(APIView):
     """
-    Permite ao usuário autenticado alterar sua senha atual.
+    API para permitir que o usuário autenticado altere sua senha atual.
     """
     permission_classes = [IsAuthenticated]
 
@@ -104,10 +111,11 @@ class AlterarSenhaAPI(APIView):
         usuario.save()
 
         return Response({'message': 'Senha alterada com sucesso!'}, status=status.HTTP_200_OK)
-    
+
+
 class RedefinirSenhaAPI(APIView):
     """
-    Permite ao usuário iniciar o processo de redefinição de senha.
+    API para iniciar o processo de redefinição de senha.
     """
     def post(self, request):
         email = request.data.get('email')
@@ -117,8 +125,7 @@ class RedefinirSenhaAPI(APIView):
 
         try:
             usuario = Usuario.objects.get(email=email)
-            refresh = RefreshToken.for_user(usuario)
-            reset_token = str(refresh.access_token)
+            reset_token = str(RefreshToken.for_user(usuario).access_token)
 
             # Envia um e-mail para redefinir a senha
             send_mail(
@@ -133,7 +140,8 @@ class RedefinirSenhaAPI(APIView):
 
         except Usuario.DoesNotExist:
             return Response({'error': 'Usuário não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
-        
+
+
 class ConfirmarRedefinicaoSenhaAPI(APIView):
     """
     API para confirmar a redefinição de senha do usuário.

@@ -85,7 +85,7 @@ class NoticiaDetalhadaSerializer(serializers.ModelSerializer):
                 'id': noticia.id,
                 'titulo': noticia.titulo,
                 'resumo': noticia.resumo,
-                'imagem': noticia.imagem.url if noticia.imagem else None,
+                'imagem': noticia.imagem,  # Retorna diretamente o valor do campo
                 'data_publicacao': noticia.data_publicacao,
             }
             for noticia in relacionadas

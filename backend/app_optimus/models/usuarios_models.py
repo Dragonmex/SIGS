@@ -7,17 +7,25 @@ import uuid
 class UsuarioManager(BaseUserManager):
     use_in_migrations = True
 
-    def create_user(self, email, password=None, perfil=None, **extra_fields):
+    def create_user(self, email, password=None, perfil='cidadao', **extra_fields):
         if not email:
             raise ValueError("O usuário deve ter um endereço de email válido.")
-        if not perfil:
-            raise ValueError("O campo 'perfil' é obrigatório para criar um usuário.")
+        
+        if perfil == 'cidadao':
+            nome_completo = extra_fields.pop('nome_completo', None)
+            cpf = extra_fields.pop('cpf', None)
+            if not nome_completo or not cpf:
+                raise ValueError("Nome completo e CPF são obrigatórios para cidadãos.")
 
         email = self.normalize_email(email)
         extra_fields.setdefault('is_active', True)
         user = self.model(email=email, perfil=perfil, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+
+        if perfil == 'cidadao':
+            Cidadao.objects.create(usuario=user, nome_completo=nome_completo, cpf=cpf)
+
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):

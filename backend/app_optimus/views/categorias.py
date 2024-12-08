@@ -9,7 +9,7 @@ class CategoriaServicoViewSet(ViewSet):
     """
     ViewSet completo para gerenciamento de Categorias de Serviços.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     def list(self, request):
         """
@@ -80,7 +80,7 @@ class CategoriaNoticiaViewSet(ViewSet):
     """
     ViewSet completo para gerenciamento de Categorias de Notícias.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     def list(self, request):
         """
