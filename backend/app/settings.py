@@ -27,6 +27,7 @@ INSTALLED_APPS = [
         
     # apps
     'app_optimus',
+    'dados',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
@@ -57,12 +58,12 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Diretório para templates personalizados
-        'APP_DIRS': True,  # Habilita busca por templates nas pastas dos apps
+        'DIRS': [BASE_DIR / 'templates'],  # Diretório global de templates
+        'APP_DIRS': True,  # Habilita busca por templates na pasta de cada app
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',  # Necessário para o Django Admin
+                'django.template.context_processors.request',  # Necessário para o Django Admin e outras funcionalidades
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -92,7 +93,7 @@ DATABASES = {
     }
 }
 
-DATABASE_ROUTERS = ['app.routers.DateDatabaseRouter']
+DATABASE_ROUTERS = ['app.routers.DadosDatabaseRouter']
 
 MIGRATION_MODULES = {
     'app_optimus': 'app_optimus.migrations',  # Padrão para o banco default
