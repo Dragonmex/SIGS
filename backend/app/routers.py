@@ -1,24 +1,30 @@
-class DatabaseRouter:
+class DateDatabaseRouter:
+    """
+    Router para direcionar migrações do modelo Person ao banco `dados_db` e bloquear outros modelos.
+    """
     def db_for_read(self, model, **hints):
-        """Define qual banco usar para leitura"""
-        if model._meta.app_label == 'conteudos':
-            return 'conteudos'
-        # Modelos de outras apps (como auth) usam o banco padrão
-        return 'default'
+        if model._meta.app_label == 'app_optimus' and model.__name__ == 'Person':
+            return 'dados_db'
+        return None
 
     def db_for_write(self, model, **hints):
-        """Define qual banco usar para escrita"""
-        if model._meta.app_label == 'conteudos':
-            return 'conteudos'
-        return 'default'
+        if model._meta.app_label == 'app_optimus' and model.__name__ == 'Person':
+            return 'dados_db'
+        return None
 
     def allow_relation(self, obj1, obj2, **hints):
-        """Permitir relações entre objetos de bancos diferentes"""
-        return True
+        if (
+            obj1._meta.app_label == 'app_optimus' and obj1.__class__.__name__ == 'Person' or
+            obj2._meta.app_label == 'app_optimus' and obj2.__class__.__name__ == 'Person'
+        ):
+            return True
+        return None
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
-        """Define onde aplicar migrações"""
-        if app_label == 'conteudos':
-            return db == 'conteudos'
-        # Tudo que não é 'conteudos' vai para o banco padrão
-        return db == 'default'
+        # Verifica o banco e o diretório de migrações
+        if db == 'dados_db':
+            return app_label == 'app_optimus' and model_name == 'person'
+        return None
+
+
+

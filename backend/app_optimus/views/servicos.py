@@ -16,13 +16,13 @@ from app_optimus.serializers.servidor_serializers import (
 
 class ServicoViewSetCidadao(ViewSet):
     """
-    ViewSet específico para Serviços acessados por Cidadãos.
+    ViewSet para acesso de cidadãos aos serviços.
     """
     permission_classes = []
 
     def list(self, request):
         """
-        Listagem de Serviços visíveis para Cidadãos.
+        Lista serviços ativos e visíveis para cidadãos.
         """
         queryset = Servico.objects.filter(status=True).order_by('-data_criacao')
         serializer = ServicoSerializer(queryset, many=True)
@@ -30,12 +30,12 @@ class ServicoViewSetCidadao(ViewSet):
 
     def retrieve(self, request, pk=None):
         """
-        Detalhamento de um Serviço para Cidadãos.
+        Detalha informações de um serviço.
         """
         try:
             servico = Servico.objects.get(pk=pk, status=True)
         except Servico.DoesNotExist:
-            return Response({'error': 'Serviço não encontrado.'}, status=404)
+            raise Http404("Serviço não encontrado.")
 
         serializer = ServicoDetalhadoSerializer(servico)
         return Response(serializer.data)
@@ -43,22 +43,22 @@ class ServicoViewSetCidadao(ViewSet):
 # ViewSet para Servidores
 class ServicoViewSetServidor(ViewSet):
     """
-    ViewSet para gerenciamento de serviços pelos servidores.
+    ViewSet para gerenciamento de serviços por servidores.
     """
     permission_classes = [IsAuthenticated, IsServidor]
 
     def get_servico(self, pk):
         """
-        Método auxiliar para buscar um serviço.
+        Auxiliar para buscar um serviço ou retornar 404.
         """
         try:
             return Servico.objects.get(pk=pk)
         except Servico.DoesNotExist:
-            raise Response({'error': 'Serviço não encontrado.'}, status=404)
+            raise Http404("Serviço não encontrado.")
 
     def list(self, request):
         """
-        Listagem de todos os serviços.
+        Lista todos os serviços para servidores.
         """
         queryset = Servico.objects.all().order_by('-data_criacao')
         serializer = ServicoAdminSerializer(queryset, many=True)
@@ -66,7 +66,7 @@ class ServicoViewSetServidor(ViewSet):
 
     def retrieve(self, request, pk=None):
         """
-        Detalhamento de um serviço específico.
+        Detalha informações de um serviço específico.
         """
         servico = self.get_servico(pk)
         serializer = ServicoAdminDetalhadoSerializer(servico)
@@ -74,7 +74,7 @@ class ServicoViewSetServidor(ViewSet):
 
     def create(self, request):
         """
-        Criação de um novo serviço.
+        Cria um novo serviço.
         """
         serializer = ServicoAdminSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -86,7 +86,7 @@ class ServicoViewSetServidor(ViewSet):
 
     def update(self, request, pk=None):
         """
-        Atualização de um serviço.
+        Atualiza um serviço.
         """
         servico = self.get_servico(pk)
         serializer = ServicoAdminSerializer(servico, data=request.data, partial=True)
@@ -99,75 +99,62 @@ class ServicoViewSetServidor(ViewSet):
 
     def destroy(self, request, pk=None):
         """
-        Exclusão de um serviço.
+        Remove um serviço.
         """
         servico = self.get_servico(pk)
         servico_nome = servico.nome
         servico.delete()
-        return Response({'message': f"Serviço '{servico_nome}' excluído com sucesso."}, status=status.HTTP_204_NO_CONTENT)
-    
-    def patch(self, request, pk=None, etapa_pk=None):
-        """
-        Atualiza parcialmente uma etapa.
-        """
-        try:
-            etapa = ServicoEtapa.objects.get(pk=etapa_pk, servico_id=pk)
-        except ServicoEtapa.DoesNotExist:
-            return Response({'error': 'Etapa não encontrada.'}, status=404)
-
-        serializer = ServicoEtapaAdminSerializer(etapa, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
         return Response({
-            'message': f"Etapa '{serializer.data['nome']}' atualizada com sucesso.",
-            'data': serializer.data
-        })
-    
+            'message': f"Serviço '{servico_nome}' excluído com sucesso."
+        }, status=status.HTTP_204_NO_CONTENT)
+
     @action(detail=True, methods=['get', 'post'], url_path='etapas')
     def gerenciar_etapas(self, request, pk=None):
         """
         Listar ou criar etapas para um serviço.
         """
         servico = self.get_servico(pk)
+
         if request.method == 'GET':
             serializer = ServicoEtapaAdminSerializer(servico.etapas.all(), many=True)
             return Response(serializer.data)
 
-        # POST - Criar etapa
+        # Criação de etapa
         data = {**request.data, 'servico': servico.id}
         serializer = ServicoEtapaAdminSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({
-            'message': f"Etapa '{serializer.data['nome']}' criada com sucesso para o serviço '{servico.nome}'.",
+            'message': f"Etapa '{serializer.data['nome']}' criada.",
             'data': serializer.data
         }, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['delete'], url_path='etapas/(?P<etapa_pk>[^/.]+)')
     def deletar_etapa(self, request, pk=None, etapa_pk=None):
         """
-        Deletar uma etapa específica de um serviço.
+        Remove uma etapa específica.
         """
         try:
             etapa = ServicoEtapa.objects.get(pk=etapa_pk, servico_id=pk)
-            etapa_nome = etapa.nome
-            etapa.delete()
-            return Response({'message': f"Etapa '{etapa_nome}' excluída com sucesso."}, status=status.HTTP_204_NO_CONTENT)
         except ServicoEtapa.DoesNotExist:
-            return Response({'error': 'Etapa não encontrada.'}, status=404)
+            raise Http404("Etapa não encontrada.")
+
+        etapa_nome = etapa.nome
+        etapa.delete()
+        return Response({
+            'message': f"Etapa '{etapa_nome}' removida com sucesso."
+        }, status=status.HTTP_204_NO_CONTENT)
 
 
 class SolicitacaoServicoViewSet(ModelViewSet):
     """
-    ViewSet para gerenciamento de solicitações de serviços.
+    ViewSet para gerenciamento de solicitações.
     """
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         """
-        Filtra solicitações com base no perfil do usuário.
-        - Usuários regulares (cidadãos) visualizam apenas suas solicitações.
-        - Servidores visualizam todas as solicitações.
+        Define quais solicitações o usuário pode visualizar.
         """
         usuario = self.request.user
         if usuario.perfil == 'servidor':
@@ -176,7 +163,7 @@ class SolicitacaoServicoViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         """
-        Define o serializer baseado na ação.
+        Seleciona o serializer com base na ação.
         """
         if self.action == 'list':
             return SolicitacaoCompactaSerializer
@@ -186,48 +173,16 @@ class SolicitacaoServicoViewSet(ModelViewSet):
             return SolicitacaoServidorSerializer
         return SolicitacaoServicoSerializer
 
-    def create(self, request, *args, **kwargs):
+    def destroy(self, request, pk=None):
         """
-        Criação de uma nova solicitação de serviço.
-        """
-        serializer = self.get_serializer(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({'message': 'Solicitação criada com sucesso!'}, status=status.HTTP_201_CREATED)
-
-    def update(self, request, pk=None):
-        """
-        Atualiza o status geral e os comentários de uma solicitação (servidores).
+        Remove uma solicitação.
         """
         try:
             solicitacao = SolicitacaoServico.objects.get(pk=pk)
+            solicitacao.delete()
+            return Response({'message': 'Solicitação removida com sucesso.'}, status=status.HTTP_204_NO_CONTENT)
         except SolicitacaoServico.DoesNotExist:
-            return Response({'error': 'Solicitação não encontrada.'}, status=status.HTTP_404_NOT_FOUND)
-
-        if request.user.perfil != 'servidor':
-            return Response({'error': 'Permissão negada.'}, status=status.HTTP_403_FORBIDDEN)
-
-        solicitacao.status = request.data.get('status', solicitacao.status)
-        solicitacao.comentario_servidor = request.data.get('comentario_servidor', solicitacao.comentario_servidor)
-        solicitacao.save()
-
-        return Response({'mensagem': 'Solicitação atualizada com sucesso.'})
-
-    @action(detail=True, methods=['put'], url_path='etapas/(?P<etapa_pk>[^/.]+)')
-    def concluir_etapa(self, request, pk=None, etapa_pk=None):
-        """
-        Marca uma etapa como concluída.
-        """
-        try:
-            etapa = SolicitacaoEtapa.objects.get(pk=etapa_pk, solicitacao_id=pk)
-        except SolicitacaoEtapa.DoesNotExist:
-            return Response({'error': 'Etapa não encontrada.'}, status=status.HTTP_404_NOT_FOUND)
-
-        etapa.concluida = request.data.get('concluida', False)
-        etapa.data_conclusao = now() if etapa.concluida else None
-        etapa.save()
-
-        return Response({'mensagem': 'Etapa marcada como concluída.'})
+            raise Http404("Solicitação não encontrada.")
     
 class SolicitacaoServidorViewSet(ViewSet):
     """

@@ -81,10 +81,24 @@ DATABASES = {
         'PASSWORD': 'admin',
         'HOST': 'localhost',
         'PORT': '5432',
+    },
+    'dados_db': {  # Novo banco de dados
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dados_db',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
-DATABASE_ROUTERS = ['app.routers.DatabaseRouter']
+DATABASE_ROUTERS = ['app.routers.DateDatabaseRouter']
+
+MIGRATION_MODULES = {
+    'app_optimus': 'app_optimus.migrations',  # Padrão para o banco default
+    'app_optimus_dados_db': 'app_optimus.migrations_dados_db',  # Novo diretório para dados_db
+}
+
 
 AUTH_USER_MODEL = 'app_optimus.Usuario'
 

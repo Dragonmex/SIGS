@@ -1,29 +1,33 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import transaction
 import uuid
 
 
 class UsuarioManager(BaseUserManager):
     use_in_migrations = True
 
-    def create_user(self, email, password=None, perfil='cidadao', **extra_fields):
+    def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("O usuário deve ter um endereço de email válido.")
-        
-        if perfil == 'cidadao':
-            nome_completo = extra_fields.pop('nome_completo', None)
-            cpf = extra_fields.pop('cpf', None)
-            if not nome_completo or not cpf:
-                raise ValueError("Nome completo e CPF são obrigatórios para cidadãos.")
 
         email = self.normalize_email(email)
         extra_fields.setdefault('is_active', True)
-        user = self.model(email=email, perfil=perfil, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
+        perfil = 'cidadao'  # Todo usuário criado será cidadão
 
-        if perfil == 'cidadao':
+        nome_completo = extra_fields.pop('nome_completo', None)
+        cpf = extra_fields.pop('cpf', None)
+
+        # Verificação explícita dos campos
+        if not nome_completo or not cpf:
+            raise ValueError("Nome completo e CPF são obrigatórios para cidadãos.")
+
+        # Criação do usuário e cidadão
+        with transaction.atomic():
+            user = self.model(email=email, perfil=perfil, **extra_fields)
+            user.set_password(password)
+            user.save(using=self._db)
             Cidadao.objects.create(usuario=user, nome_completo=nome_completo, cpf=cpf)
 
         return user
@@ -37,13 +41,7 @@ class UsuarioManager(BaseUserManager):
         if not extra_fields.get('is_superuser'):
             raise ValueError("Superusuários devem ter is_superuser=True.")
 
-        return self.create_user(email, password, perfil='admin', **extra_fields)
-
-    def ativos(self):
-        return self.filter(is_active=True)
-
-    def por_perfil(self, perfil):
-        return self.filter(perfil=perfil)
+        return self.create_user(email, password, **extra_fields)
 
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
@@ -55,7 +53,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     id_usuario = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
-    perfil = models.CharField(max_length=50, choices=PERFIL_CHOICES)
+    perfil = models.CharField(max_length=50, choices=PERFIL_CHOICES, default='cidadao')
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     ativo = models.BooleanField(default=True)
@@ -73,16 +71,6 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-
-    def save(self, *args, **kwargs):
-        if self.perfil not in dict(self.PERFIL_CHOICES):
-            raise ValueError(f"Perfil '{self.perfil}' inválido.")
-        super().save(*args, **kwargs)
-
-        if self.perfil == 'servidor' and not hasattr(self, 'servidor'):
-            Servidor.objects.get_or_create(usuario=self)
-        elif self.perfil == 'cidadao' and not hasattr(self, 'cidadao'):
-            Cidadao.objects.get_or_create(usuario=self)
 
 
 class Cidadao(models.Model):
