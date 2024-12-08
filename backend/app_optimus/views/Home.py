@@ -1,61 +1,52 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.permissions import IsAuthenticated
-from app_optimus.models import Servico, Noticia, CategoriaNoticia
-from django.shortcuts import get_object_or_404
-from app_optimus.serializers import NoticiaDetalhadaSerializer
-
+from django.contrib.auth.models import AnonymousUser
+from app_optimus.models.funcionalidades_models import Servico, Noticia, CategoriaNoticia
+from app_optimus.serializers.cidadao_serializers import ServicoSerializer as ServicoCidadaoSerializer, NoticiaSerializer as NoticiaCidadaoSerializer
+from app_optimus.serializers.servidor_serializers import ServicoAdminSerializer as ServicoServidorSerializer, NoticiaAdminSerializer as NoticiaServidorSerializer
 
 class HomeAPI(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    """
+    HomeAPI adaptada para exibir dados personalizados com base no perfil do usuário.
+    """
 
     def get(self, request, *args, **kwargs):
         try:
-            # Buscar serviços ativos e últimas notícias
-            servicos = Servico.objects.filter(status=True).order_by('-data_criacao')[:6]
-            noticias = Noticia.objects.order_by('-data_publicacao')[:6]
+            # Dados comuns
             categorias_noticias = CategoriaNoticia.objects.all()
 
-            # Preparar a resposta JSON
+            # Simular perfil padrão para usuários não autenticados
+            if isinstance(request.user, AnonymousUser):
+                perfil = 'cidadao'  # Perfil padrão para usuários anônimos
+            else:
+                perfil = request.user.perfil
+
+            # Lógica baseada no perfil do usuário
+            if perfil == 'cidadao':
+                servicos = Servico.objects.filter(status=True).order_by('-data_criacao')[:6]
+                noticias = Noticia.objects.order_by('-data_publicacao')[:6]
+
+                servico_serializer = ServicoCidadaoSerializer(servicos, many=True)
+                noticia_serializer = NoticiaCidadaoSerializer(noticias, many=True)
+
+            elif perfil == 'servidor':
+                servicos = Servico.objects.all().order_by('-data_criacao')[:6]
+                noticias = Noticia.objects.order_by('-data_publicacao')[:6]
+
+                servico_serializer = ServicoServidorSerializer(servicos, many=True)
+                noticia_serializer = NoticiaServidorSerializer(noticias, many=True)
+
+            else:
+                return Response({'error': 'Perfil de usuário não suportado.'}, status=status.HTTP_403_FORBIDDEN)
+
+            # Dados finais para resposta
             data = {
-                'servicos': [
-                    {
-                        'id': servico.id,
-                        'nome': servico.nome,
-                        'descricao': servico.descricao,
-                        'data_criacao': servico.data_criacao,
-                    }
-                    for servico in servicos
-                ],
-                'noticias': [
-                    {
-                        'id': noticia.id,
-                        'titulo': noticia.titulo,
-                        'resumo': noticia.resumo,
-                        'data_publicacao': noticia.data_publicacao,
-                        'categoria': noticia.categoria.nome,
-                        'imagem': noticia.imagem.url if noticia.imagem else None,
-                    }
-                    for noticia in noticias
-                ],
-                'categorias_noticias': [
-                    {'id': categoria.id, 'nome': categoria.nome}
-                    for categoria in categorias_noticias
-                ],
+                'servicos': servico_serializer.data,
+                'noticias': noticia_serializer.data,
             }
 
             return Response(data, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class NoticiaDetailView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-    def get(self, request, noticia_id, *args, **kwargs):
-        # Busca a notícia pelo ID
-        noticia = get_object_or_404(Noticia, id=noticia_id)
-        serializer = NoticiaDetalhadaSerializer(noticia)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': f'Erro ao buscar dados: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

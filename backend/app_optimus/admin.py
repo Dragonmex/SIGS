@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django import forms
 from django.core.exceptions import ValidationError
-from app_optimus.models.usuarios import Usuario, Cidadao, Servidor
-from app_optimus.models.servicos import CategoriaNoticia, CategoriaServico, Noticia, Servico
+from app_optimus.models.usuarios_models import Usuario, Cidadao, Servidor
+from app_optimus.models.funcionalidades_models import CategoriaNoticia, CategoriaServico, Noticia, Servico
 from django.contrib.auth.forms import UserChangeForm
 
 # Registro de categorias e serviços

@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-@#+9q_#nz!=15y(ljl=ulrjk$_@1ku^-&1s2=33$)x2rx*=bk8
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.3.21', 'localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -30,12 +30,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
+    'django_extensions',
     
     'corsheaders',
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Adicione as origens necessárias
+    "http://192.168.3.5",  # IP do frontend
+    "http://localhost:3000",  # Para teste local (opcional)
 ]
 
 MIDDLEWARE = [
@@ -121,7 +123,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -133,3 +135,5 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
