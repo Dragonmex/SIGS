@@ -6,27 +6,22 @@ from app_optimus.views.perfil import PerfilAPI
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.routers import DefaultRouter
 
+from app_optimus.routers import api_router
+
+# Instância do roteador para endpoints adicionais
 router = DefaultRouter()
 
-# URLs Globais
 urlpatterns = [
-    # Usuários
-    path('api/register/', CadastroUsuarioAPI.as_view(), name='api-cadastro'),
-    path('api/login/', LoginAPI.as_view(), name='api-login'),
-    path('api/logout/', LogoutAPI.as_view(), name='api-logout'),
-    path('api/perfil/', PerfilAPI.as_view(), name='perfil'),
-    path('api/alterar-senha/', AlterarSenhaAPI.as_view(), name='alterar-senha'),
-    path('api/redefinir-senha/', RedefinirSenhaAPI.as_view(), name='redefinir-senha'),
-    path('api/redefinicao-senha/', ConfirmarRedefinicaoSenhaAPI.as_view(), name='redefinicao-senha'),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    #path('admin/', admin.site.urls),
-    path('api/ouvidoria/', include(router.urls)),
+    # Endpoints de autenticação
+    path('register/', CadastroUsuarioAPI.as_view(), name='api-cadastro'),
+    path('login/', LoginAPI.as_view(), name='api-login'),
+    path('logout/', LogoutAPI.as_view(), name='api-logout'),
+    path('perfil/', PerfilAPI.as_view(), name='perfil'),
+    path('alterar-senha/', AlterarSenhaAPI.as_view(), name='alterar-senha'),
+    path('redefinir-senha/', RedefinirSenhaAPI.as_view(), name='redefinir-senha'),
+    path('redefinicao-senha/', ConfirmarRedefinicaoSenhaAPI.as_view(), name='redefinicao-senha'),
+    path('home/', HomeAPI.as_view(), name='api-home'),
 
-
-    # Página Inicial
-    path('api/home/', HomeAPI.as_view(), name='api-home'),
-
-    # Funcionalidades Dinâmicas
-    path('api/', include(api_router)),
+    # Rotas dinâmicas do roteador
+    path('', include(api_router)),
 ]

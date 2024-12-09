@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import gender_data_api
-from .views import gender_chart_view
+from .views import income_distribution_api, education_distribution_api, district_distribution_api, gender_distribution_api
 
 urlpatterns = [
-    path('api/gender-data/', gender_data_api, name='gender_data_api'),
-    path('gender-chart/', gender_chart_view, name='gender_chart'),
+    path('gender-distribution/', gender_distribution_api, name='gender_distribution_api'),
+    path('income-distribution/', income_distribution_api, name='income_distribution_api'),
+    path('education-distribution/', education_distribution_api, name='education_distribution_api'),
+    path('district-distribution/', district_distribution_api, name='district_distribution_api'),
+    
 ]
-
