@@ -1,7 +1,6 @@
-from django.db.models import Count, Avg, F
+from django.db.models import Count, Avg, Min, Max
 from django.http import JsonResponse
 from .models import Resident
-from django.db.models import Count, Avg, Min, Max
 
 
 def income_distribution_api(request):
