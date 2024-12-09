@@ -14,10 +14,6 @@ class UsuarioSerializer(serializers.ModelSerializer):
 
 
 class CadastroUsuarioSerializer(serializers.ModelSerializer):
-    """
-    Serializer para criar novos usuários, com validação de senha.
-    Inclui a criação do perfil de cidadão automaticamente.
-    """
     nome_completo = serializers.CharField(write_only=True)
     cpf = serializers.CharField(write_only=True)
 
@@ -25,48 +21,29 @@ class CadastroUsuarioSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = ['email', 'password', 'nome_completo', 'cpf']
         extra_kwargs = {
-            'password': {'write_only': True},  # Oculta o campo de senha na resposta
+            'password': {'write_only': True},
         }
 
     def validate_password(self, value):
-        """
-        Valida a força da senha, garantindo segurança.
-        """
         if len(value) < 8:
             raise ValidationError("A senha deve ter pelo menos 8 caracteres.")
         return value
 
     def validate_cpf(self, value):
-        """
-        Valida o CPF para garantir que não está duplicado.
-        """
         if Cidadao.objects.filter(cpf=value).exists():
             raise ValidationError("O CPF informado já está cadastrado.")
         return value
 
     def create(self, validated_data):
-        """
-        Cria um novo usuário e o associa a um Cidadão.
-        """
         nome_completo = validated_data.pop('nome_completo')
         cpf = validated_data.pop('cpf')
 
-        # Cria o usuário
         validated_data['password'] = make_password(validated_data['password'])
-        usuario = Usuario.objects.create(perfil='cidadao', **validated_data)
 
-        # Cria o perfil de cidadão
+        usuario = Usuario.objects.create(perfil='cidadao', **validated_data)
         Cidadao.objects.create(usuario=usuario, nome_completo=nome_completo, cpf=cpf)
 
         return usuario
-
-    def validate_email(self, value):
-        """
-        Verifica se o e-mail já está cadastrado.
-        """
-        if Usuario.objects.filter(email=value).exists():
-            raise ValidationError("O e-mail informado já está cadastrado.")
-        return value
 
 class CidadaoSerializer(serializers.ModelSerializer):
     """

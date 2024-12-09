@@ -16,7 +16,8 @@ class UsuarioChangeForm(UserChangeForm):
     password = forms.CharField(
         label="Nova Senha",
         widget=forms.PasswordInput,
-        required=False
+        required=False,
+        help_text="Preencha este campo apenas se deseja alterar a senha do usuário."
     )
 
     class Meta:
@@ -24,20 +25,21 @@ class UsuarioChangeForm(UserChangeForm):
         fields = ('email', 'perfil', 'is_staff', 'is_active', 'ativo')
 
     def save(self, commit=True):
-        # Salva apenas os campos relacionados ao usuário
         user = super().save(commit=False)
         if self.cleaned_data['password']:
-            user.set_password(self.cleaned_data['password'])  # Atualiza apenas a senha
+            user.set_password(self.cleaned_data['password'])  # Atualiza a senha se fornecida
         if commit:
-            user.save()  # Salva o usuário sem alterar os dados do Cidadao
+            user.save()
         return user
 
 # Configuração do modelo Usuario no admin
 @admin.register(Usuario)
 class UsuarioAdmin(admin.ModelAdmin):
     form = UsuarioChangeForm
-    list_display = ('email', 'perfil', 'is_staff', 'ativo')
+    list_display = ('email', 'perfil', 'is_staff', 'ativo', 'is_active', 'data_cadastro')
+    list_filter = ('perfil', 'is_staff', 'ativo', 'is_active')
     search_fields = ('email',)
+    ordering = ('-data_cadastro',)
 
 # Formulário customizado para validação do CPF no admin
 class CidadaoAdminForm(forms.ModelForm):
@@ -55,13 +57,18 @@ class CidadaoAdminForm(forms.ModelForm):
 @admin.register(Cidadao)
 class CidadaoAdmin(admin.ModelAdmin):
     form = CidadaoAdminForm
-    list_display = ('usuario', 'nome_completo', 'cpf')
+    list_display = ('usuario', 'nome_completo', 'cpf', 'data_nascimento')
+    search_fields = ('nome_completo', 'cpf')
+    ordering = ('nome_completo',)
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        self.message_user(request, "CPF atualizado com sucesso!")
+        if 'cpf' in form.changed_data:
+            self.message_user(request, "CPF atualizado com sucesso!")
 
 # Configuração do modelo Servidor no admin
 @admin.register(Servidor)
 class ServidorAdmin(admin.ModelAdmin):
     list_display = ('usuario', 'nome_completo', 'cargo', 'departamento')
+    search_fields = ('nome_completo', 'cargo', 'departamento')
+    ordering = ('nome_completo',)
